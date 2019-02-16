@@ -53,5 +53,6 @@ t_word *ssl_sha224(t_word *word)
 	i = -1;
 	while (++i < 28)
 		ft_printf("%.2x", res[i]);
+	free(word);
 	return(make_word(res, 28));
 }

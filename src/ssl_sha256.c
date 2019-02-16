@@ -59,5 +59,6 @@ t_word *				ssl_sha256(t_word *word)
 	while (++i < 32)
 		ft_printf("%.2x", res[i]);
 	free(hash_values);
+	free(word);
 	return (make_word(res, 32));
 }

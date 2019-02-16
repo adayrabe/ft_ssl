@@ -53,5 +53,6 @@ t_word				*ssl_sha512(t_word *word)
 	while (++i < 64)
 		ft_printf("%.2x", res[i]);
 	free(hash_values);
+	free(word);
 	return (make_word(res, 64));
 }

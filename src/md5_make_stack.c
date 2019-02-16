@@ -24,7 +24,7 @@ static void		push(t_md5_stack **head, char *name,
 	*head = temp;
 }
 
-t_md5_stack		*make_md5_stack(void)
+t_md5_stack		*md5_make_stack(void)
 {
 	t_md5_stack *head;
 

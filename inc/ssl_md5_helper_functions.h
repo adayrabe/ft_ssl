@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ssl_helper_functions.h                             :+:      :+:    :+:   */
+/*   ssl_md5_helper_functions.h                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -25,11 +25,11 @@ typedef struct			s_md5_stack
 unsigned int			*sha256_start_processing(t_word *word,
 		unsigned int *hash_values);
 unsigned long			rot_r(unsigned long value, int amount, int bits);
-int						parce_flags(t_flags *flags, char **av, int ac, int *i);
-void					from_fd(t_flags *flags, int fd, char *name);
+int						md5_parce_flags(t_md5_flags *flags, char **av, int ac, int *i);
+void					md5_from_fd(t_md5_flags *flags, int fd, char *name);
 unsigned long			*sha512_start_processing(t_word *word,
 			unsigned long *hash_values);
-t_md5_stack				*make_md5_stack(void);
+t_md5_stack				*md5_make_stack(void);
 t_word					*make_word(unsigned char *word, size_t length);
 
 #endif

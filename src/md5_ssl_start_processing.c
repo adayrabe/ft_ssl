@@ -16,12 +16,12 @@
 #include <unistd.h>
 #include <errno.h>
 
-static t_flags	*create_flag(t_word			*(*f)(t_word *word),
+static t_md5_flags	*create_flag(t_word			*(*f)(t_word *word),
 	char *name)
 {
-	t_flags *flags;
+	t_md5_flags *flags;
 
-	flags = (t_flags *)malloc(sizeof(t_flags));
+	flags = (t_md5_flags *)malloc(sizeof(t_md5_flags));
 	flags->f = f;
 	flags->name = ft_strdup(name);
 	flags->flag_q = 0;
@@ -57,7 +57,7 @@ commands:\n\nMessage Digest commands:\n", name);
 	return (0);
 }
 
-static void		read_from_files(int i, char **av, int ac, t_flags *flags)
+static void		read_from_files(int i, char **av, int ac, t_md5_flags *flags)
 {
 	int fd;
 
@@ -68,13 +68,13 @@ static void		read_from_files(int i, char **av, int ac, t_flags *flags)
 			ft_printf("%s: %s: %s\n",
 			ft_str_tolower(flags->name), av[i], strerror(errno));
 		else
-			from_fd(flags, fd, av[i]);
+			md5_from_fd(flags, fd, av[i]);
 		i++;
 		close(fd);
 	}
 }
 
-static void		parce_args(t_flags *flags, char **av, int ac)
+static void		md5_parce_args(t_md5_flags *flags, char **av, int ac)
 {
 	int i;
 	int temp;
@@ -83,7 +83,7 @@ static void		parce_args(t_flags *flags, char **av, int ac)
 	while (++i < ac)
 		if (av[i][0] == '-' && av[i][1])
 		{
-			temp = parce_flags(flags, av, ac, &i);
+			temp = md5_parce_flags(flags, av, ac, &i);
 			if (temp == -1)
 				exit(0);
 			if (temp == -2)
@@ -96,16 +96,16 @@ static void		parce_args(t_flags *flags, char **av, int ac)
 		}
 	if (flags->write_from_stdin == 0 && (flags->flag_p == 0 || flags->flag_q
 		|| flags->flag_r))
-		from_fd(flags, 0, NULL);
+		md5_from_fd(flags, 0, NULL);
 }
 
-void			start_md5_processing(int ac, char **av, char read_from_fd)
+void			md5_start_processing(int ac, char **av, char read_from_fd)
 {
-	t_flags		*flags;
+	t_md5_flags		*flags;
 	t_md5_stack	*head;
 	t_md5_stack	*temp;
 
-	head = make_md5_stack();
+	head = md5_make_stack();
 	temp = head;
 	while (temp->name != NULL && ft_strcmp(av[0], temp->name))
 		temp = temp->next;
@@ -122,7 +122,7 @@ void			start_md5_processing(int ac, char **av, char read_from_fd)
 		free(head);
 		head = temp;
 	}
-	parce_args(flags, av, ac);
+	md5_parce_args(flags, av, ac);
 	ft_strdel(&flags->name);
 	free(flags);
 }

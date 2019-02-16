@@ -164,7 +164,7 @@ static int			md5_init_m_arr(t_word *word, unsigned int **m_arr,
 	return (curr_length < 64);
 }
 
-unsigned int		*md5_start_processing(t_word *word,
+unsigned int		*md5_start(t_word *word,
 				unsigned int *hash_values)
 {
 	unsigned int	*temp_vars;
@@ -207,7 +207,7 @@ t_word *ssl_md5(t_word *word)
 	hash_values[1] = 0xefcdab89;
 	hash_values[2] = 0x98badcfe;
 	hash_values[3] = 0x10325476;
-	hash_values = md5_start_processing(word, hash_values);
+	hash_values = md5_start(word, hash_values);
 	i = -1;
 	res = ft_str_unsigned_new(16);
 	while (++i < 4 && (j = 1))
@@ -221,5 +221,6 @@ t_word *ssl_md5(t_word *word)
 	while (++i < 16)
 		ft_printf("%.2x", res[i]);
 	free(hash_values);
+	free(word);
 	return (make_word(res, 16));
 }
