@@ -2,3 +2,4 @@
 .idea/modules.xml
 cmake*
 *.[oa]
+.DS_Store
