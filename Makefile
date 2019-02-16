@@ -18,9 +18,15 @@ INC_DIR := ./inc/
 LIB_DIR := ./libftprintf/
 
 RM = /bin/rm -rf
+# dirs = * parse/* parse/test/*
 
-SRC := $(wildcard src/*)
+SRC := $(wildcard src/*/*.c) src/main.c
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:src/%.c=%.o))
+# OBJ     =  $(foreach dirz, $(dirs), \
+#         \
+#         $(patsubst %.c,%.o,$(wildcard $(dirz).c)) \
+#         \
+#     )
 
 LIBFT := $(LIB_DIR)libftprintf.a
 LIBFT_INC := $(LIB_DIR)inc
@@ -36,6 +42,8 @@ $(NAME): $(LIBFT) $(OBJ) $(INC_DIR)*
 
 $(OBJ_DIR)%.o:%.c
 	@mkdir -p obj
+	@mkdir -p obj/des
+	@mkdir -p obj/md5
 	@gcc $(FLAGS) $(HEADER_FLAGS) -c $< -o $@ 
 $(LIBFT):
 	@make -C $(LIB_DIR)

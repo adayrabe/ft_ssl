@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_stack.c                                       :+:      :+:    :+:   */
+/*   md5_manage_stack.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -22,6 +22,19 @@ static void		push(t_md5_stack **head, char *name,
 	temp->name = ft_strdup(name);
 	temp->next = *head;
 	*head = temp;
+}
+
+void md5_free_stack(t_md5_stack **head)
+{
+	t_md5_stack *temp;
+
+	while (*head)
+	{
+		temp = (*head)->next;
+		ft_strdel(&(*head)->name);
+		free(*head);
+		*head = temp;
+	}
 }
 
 t_md5_stack		*md5_make_stack(void)

@@ -31,5 +31,8 @@ unsigned long			*sha512_start_processing(t_word *word,
 			unsigned long *hash_values);
 t_md5_stack				*md5_make_stack(void);
 t_word					*make_word(unsigned char *word, size_t length);
+void	des_start_processing(int ac, char **av, char read_from_fd,
+	t_md5_stack **head_md5);
+void md5_free_stack(t_md5_stack **head);
 
 #endif
