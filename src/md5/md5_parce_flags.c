@@ -30,6 +30,7 @@ static void		print_result(t_word *word)
 	i = -1;
 	while (++i < word->length)
 		ft_printf("%.2x", word->word[i]);
+	ft_str_unsigned_del(&(word)->word);
 }
 
 static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)

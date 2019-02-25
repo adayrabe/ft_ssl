@@ -1,6 +1,7 @@
 #include "ssl_des_helper_functions.h"
 #include "ssl_md5_helper_functions.h"
 #include <unistd.h>
+#include <fcntl.h>
 
 static int		print_error(t_des_stack **head_des, t_md5_stack **head_md5, char *name)
 {
@@ -54,6 +55,62 @@ void add_salt(t_des_flags *flags)
 	}
 }
 
+unsigned long make_key(char *pass, unsigned long salt)
+{
+	unsigned char *temp;
+	unsigned int i;
+	t_word *res;
+	unsigned long key;
+
+	temp = ft_str_unsigned_new(ft_strlen(pass) + 8);
+	i = -1;
+	while (++i < ft_strlen(pass))
+		temp[i] = pass[i];
+	while (++i <= ft_strlen(pass) + 8)
+	{
+		temp[ft_strlen(pass) + 8 + ft_strlen(pass)- i] = salt % 256;
+		salt /= 256;
+	}
+	res = ssl_md5(make_word(temp, ft_strlen(pass) + 8));
+	i = -1;
+	key = 0;
+	while (++i < 8)
+		key = key * 256 + res->word[i];
+	ft_str_unsigned_del(&(res->word));
+	free(res);
+	return (key);
+}
+
+unsigned long make_vector(char *pass, unsigned long salt)
+{
+	unsigned char *temp;
+	unsigned int i;
+	t_word *res;
+	unsigned long key;
+
+	temp = ft_str_unsigned_new(ft_strlen(pass) + 8);
+	i = -1;
+	while (++i < ft_strlen(pass))
+		temp[i] = pass[i];
+	while (++i <= ft_strlen(pass) + 8)
+	{
+		temp[ft_strlen(pass) + 8 + ft_strlen(pass)- i] = salt % 256;
+		salt /= 256;
+	}
+	res = ssl_md5(make_word(temp, ft_strlen(pass) + 8));
+	// i = -1;
+	// while (++i < ft_strlen(pass) + 8)
+	// 	ft_printf("%.2x", res->word[i]);
+	// ft_printf("\n");
+	i = -1;
+	key = 0;
+	while (++i < 8)
+		key = key * 256 + res->word[res->length - 8 + i];
+	ft_str_unsigned_del(&(res->word));
+	free(res);
+	return (key);
+}
+
 void		des_parce_arguments(t_des_flags *flags, char **av, int ac)
 {
 	int i;
@@ -77,7 +134,10 @@ void		des_parce_arguments(t_des_flags *flags, char **av, int ac)
 password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	}
 	if (!flags->has_key)
-		flags->key = pbkdf(flags->pass, flags->salt, 10000);
+	{
+		flags->key = make_vector(flags->pass, flags->salt);
+		ft_printf("%lx",pbkdf2(flags->pass, flags->salt, 1000));
+	}
 	if (!flags->has_vector)
 		;
 }
@@ -128,4 +188,7 @@ void			des_start_processing(int ac, char **av, char read_from_fd,
 		flags.output_fd, flags.key, flags.has_key, flags.pass, flags.salt, flags.has_salt,
 		flags.vector, flags.has_vector, flags.func_name);
 	ft_strdel(&(flags.pass));
+	close(flags.input_fd);
+	close(flags.output_fd);
+	// system("leaks ft_ssl");
 }

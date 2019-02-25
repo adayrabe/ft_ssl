@@ -32,4 +32,4 @@ void			des_parce_flags(t_des_flags *flags, char **av,
 	int ac, int *i);
 void print_flag_error(t_des_flags *flags, int num);
 unsigned long make_num(char *str, bool *error);
-unsigned long pbkdf(char *pass, unsigned long salt, int c);
+unsigned long pbkdf2(char *pass, unsigned long salt, int c);

@@ -39,9 +39,9 @@ void get_fd(t_des_flags *flags, char **av, int ac, int *i)
 	if (*i == ac)
 		print_flag_error(flags, 1);
 	if (c == 'i')
-		flags->input_fd = open(av[*i], O_RDONLY);
+		flags->input_fd = open(av[*i], O_RDONLY, 0644);
 	else
-		flags->output_fd = open(av[*i], O_WRONLY | O_CREAT | O_TRUNC);
+		flags->output_fd = open(av[*i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 }
 
 unsigned long make_num(char *str, bool *error)
