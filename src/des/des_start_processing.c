@@ -77,7 +77,7 @@ void		des_parce_arguments(t_des_flags *flags, char **av, int ac)
 password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	}
 	if (!flags->has_key)
-		flags->key = pbkdf(flags->pass, flags->salt, 1000);
+		flags->key = pbkdf(flags->pass, flags->salt, 10000);
 	if (!flags->has_vector)
 		;
 }

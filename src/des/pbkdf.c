@@ -87,20 +87,20 @@ unsigned long pbkdf(char *pass, unsigned long salt, int c)
 		salt /= 256;
 	}
 	first[11] = 1;
-	temp = hmac(ssl_sha256, key, make_word(first, 12));
+	temp = hmac(ssl_sha1, key, make_word(first, 12));
 	// temp = hmac(ssl_sha256, key, make_word((unsigned char *)"The quick brown fox jumps over the lazy dog", 43));
 	i = 1;
-	res = hmac(ssl_sha256, key, make_word(first, 12));
+	res = hmac(ssl_sha1, key, make_word(first, 12));
 	ft_str_unsigned_del(&first);
 	while (++i <= c)
 	{
-		temp = hmac(ssl_sha256, key, temp);
+		temp = hmac(ssl_sha1, key, temp);
 		res->word = do_xor(&(res->word), temp->word, res->length, temp->length);
 	}
-	// i = -1;
-	// while (++i < (int)res->length)
-	// 	ft_printf("%x", res->word[i]);
-	// ft_printf("\n");
+	i = -1;
+	while (++i < (int)temp->length)
+		ft_printf("%x", temp->word[i]);
+	ft_printf("\n");
 	free(key);
 	free(temp);
 	return (make_key(res));
