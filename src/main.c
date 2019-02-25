@@ -12,7 +12,7 @@
 
 #include <fcntl.h>
 #include "ssl_functions.h"
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 #include <unistd.h>
 #include <errno.h>
 
@@ -36,11 +36,11 @@ int				main(int ac, char **av)
 				if ((line[i] == ' ' && line[i + 1] != ' ' && line[i + 1])
 					|| (i == 0 && line[i] != ' '))
 					argc++;
-			line[0] ? md5_start_processing(argc, argv, 1) : 0;
+			line[0] ? md_start_processing(argc, argv, 1) : 0;
 			ft_strdel(&line);
 			ft_printf("ft_ssl>");
 		}
 	}
-	(ac >= 2) ? md5_start_processing(ac - 1, &av[1], 0) : 0;
+	(ac >= 2) ? md_start_processing(ac - 1, &av[1], 0) : 0;
 	return (0);
 }

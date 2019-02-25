@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ssl_functions.h"
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 
 static unsigned long	*sha512_init_hash_values(void)
 {

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   md5_manage_stack.c                                 :+:      :+:    :+:   */
+/*   md_manage_stack.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,23 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 
-static void		push(t_md5_stack **head, char *name,
+static void		push(t_md_stack **head, char *name,
 	t_word			*(*f)(t_word *word))
 {
-	t_md5_stack *temp;
+	t_md_stack *temp;
 
-	temp = (t_md5_stack *)malloc(sizeof(t_md5_stack));
+	temp = (t_md_stack *)malloc(sizeof(t_md_stack));
 	temp->f = f;
 	temp->name = ft_strdup(name);
 	temp->next = *head;
 	*head = temp;
 }
 
-void md5_free_stack(t_md5_stack **head)
+void md_free_stack(t_md_stack **head)
 {
-	t_md5_stack *temp;
+	t_md_stack *temp;
 
 	while (*head)
 	{
@@ -37,9 +37,9 @@ void md5_free_stack(t_md5_stack **head)
 	}
 }
 
-t_md5_stack		*md5_make_stack(void)
+t_md_stack		*md_make_stack(void)
 {
-	t_md5_stack *head;
+	t_md_stack *head;
 
 	head = NULL;
 	push(&head, NULL, NULL);

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   md5_parce_flags.c                                  :+:      :+:    :+:   */
+/*   md_parce_flags.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ssl_functions.h"
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 
 t_word	*make_word(unsigned char *word, size_t length)
 {
@@ -33,7 +33,7 @@ static void		print_result(t_word *word)
 	ft_str_unsigned_del(&(word)->word);
 }
 
-static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)
+static void		parce_s_flag(t_md_flags *flags, char **av, int *i, int *j)
 {
 	t_word *word;
 
@@ -62,7 +62,7 @@ static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)
 	ft_printf("\n");
 }
 
-void			md5_from_fd(t_md5_flags *flags, int fd, char *name)
+void			md_from_fd(t_md_flags *flags, int fd, char *name)
 {
 	unsigned char	*line;
 	size_t			length;
@@ -89,7 +89,7 @@ void			md5_from_fd(t_md5_flags *flags, int fd, char *name)
 	ft_str_unsigned_del(&line);
 }
 
-int				md5_parce_flags(t_md5_flags *flags, char **av, int ac, int *i)
+int				md_parce_flags(t_md_flags *flags, char **av, int ac, int *i)
 {
 	int j;
 
@@ -110,7 +110,7 @@ IN to STDOUT and append cheksum to STDOUT\n-q: quiet mode\n-r: reverse format\n\
 		(av[*i][j] == 'q') ? flags->flag_q = 1 : 0;
 		(av[*i][j] == 'r') ? flags->flag_r = 1 : 0;
 		(av[*i][j] == 'b') ? flags->flag_b = 1 : 0;
-		(av[*i][j] == 'p' && ++flags->flag_p) ? md5_from_fd(flags, 0, NULL) : 0;
+		(av[*i][j] == 'p' && ++flags->flag_p) ? md_from_fd(flags, 0, NULL) : 0;
 		if (av[*i][j] == 's' && (flags->write_from_stdin = 1))
 			(*i == ac - 1 && !av[*i][j + 1]) ? (ft_printf("%s: option requires \
 an argument -- s\n", flags->name)) : parce_s_flag(flags, av, i, &j);

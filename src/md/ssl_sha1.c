@@ -1,4 +1,4 @@
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 
 static void		sha1_append_w_arr(unsigned int **w_arr)
 {

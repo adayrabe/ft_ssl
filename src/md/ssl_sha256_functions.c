@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ssl_md5_helper_functions.h"
+#include "ssl_md_helper_functions.h"
 
 static unsigned int k_arr[64] = (unsigned int[64])
 	{

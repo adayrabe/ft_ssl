@@ -43,7 +43,7 @@ $(NAME): $(LIBFT) $(OBJ) $(INC_DIR)*
 $(OBJ_DIR)%.o:%.c
 	@mkdir -p obj
 	@mkdir -p obj/des
-	@mkdir -p obj/md5
+	@mkdir -p obj/md
 	@gcc $(FLAGS) $(HEADER_FLAGS) -c $< -o $@ 
 $(LIBFT):
 	@make -C $(LIB_DIR)
