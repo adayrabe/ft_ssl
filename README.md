@@ -5,6 +5,8 @@
 	or
 	./ft_ssl [Cipher Commands [Cipher flags]]
 
+	In case if there is no possible arguments, the arguments will be read form STDIN (as in OpenSSL).
+
 	This project recreates the OpenSSL's behaviour of various functions. In the md folder, there will be Message Digest commands, in the des folder there will be Cipher commands.
 
 	Message Digest Commands available:
@@ -41,3 +43,6 @@
 	-p, password in ascii is the next argument. (Behave like a modifiedd openssl des -pass not like openssl des -p or -P)
 	-s, the salt in hex is the next argument. (Behave like openssl des -S)
 	-v, initialization vector in hex is the next argument. (Behave like openssl des -iv not openssl des -v)
+
+	Other functions available:
+	pbkdf2 (for now works only for computing hashes of 16 bytes long, planning to make a proper pbkdf2 function in the future)
