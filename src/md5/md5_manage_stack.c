@@ -48,5 +48,6 @@ t_md5_stack		*md5_make_stack(void)
 	push(&head, "sha256", ssl_sha256);
 	push(&head, "sha384", ssl_sha384);
 	push(&head, "sha512", ssl_sha512);
+	push(&head, "sha1", ssl_sha1);
 	return (head);
 }

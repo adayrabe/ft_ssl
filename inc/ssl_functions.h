@@ -29,5 +29,6 @@ t_word			*ssl_sha224(t_word *word);
 t_word			*ssl_sha512(t_word *word);
 t_word			*ssl_sha384(t_word *word);
 t_word			*ssl_des_ecb(t_word *word);
+t_word			*ssl_sha1(t_word *word);
 t_word			*make_word(unsigned char *word, size_t length);
 #endif
