@@ -48,12 +48,12 @@ t_word *ssl_sha384(t_word *word)
 		}
 	}
 	free(hash_values);
-	i = 0;
-	while (i < 48)
-	{
-		ft_printf("%.2x", res[i]);
-		i++;
-	}		
+	// i = 0;
+	// while (i < 48)
+	// {
+	// 	ft_printf("%.2x", res[i]);
+	// 	i++;
+	// }		
 	free(word);
 	return(make_word(res, 48));
 }

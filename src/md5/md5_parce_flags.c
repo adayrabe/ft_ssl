@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   md5_parce_arguments.c                              :+:      :+:    :+:   */
+/*   md5_parce_flags.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -19,8 +19,17 @@ t_word	*make_word(unsigned char *word, size_t length)
 
 	res = (t_word *)malloc(sizeof(t_word));
 	res->word = word;
-	res->length = length * 8;
+	res->length = length;
 	return (res);
+}
+
+static void		print_result(t_word *word)
+{
+	unsigned long i;
+
+	i = -1;
+	while (++i < word->length)
+		ft_printf("%.2x", word->word[i]);
 }
 
 static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)
@@ -33,7 +42,7 @@ static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)
 			ft_str_to_upper(flags->name), &av[*i][*j + 1]) : 0;
 		word = make_word((unsigned char *)&av[*i][*j + 1],
 			ft_strlen(&av[*i][*j + 1]));
-		word = flags->f(word);
+		print_result(word = flags->f(word));
 		if (!flags->flag_q && flags->flag_r)
 			ft_printf(" \"%s\"", &av[*i][*j + 1]);
 		*j = *j + (int)ft_strlen(&av[*i][*j + 1]);
@@ -43,7 +52,7 @@ static void		parce_s_flag(t_md5_flags *flags, char **av, int *i, int *j)
 		word = make_word((unsigned char *)av[++(*i)], ft_strlen(av[*i]));
 		if (!flags->flag_q && !flags->flag_r)
 			ft_printf("%s (\"%s\") = ", ft_str_to_upper(flags->name), av[*i]);
-		word = flags->f(word);
+	 print_result(word = flags->f(word));
 		if (!flags->flag_q && flags->flag_r)
 			ft_printf(" \"%s\"", av[*i]);
 		(*j) = (int)ft_strlen(av[*i]) - 1;
@@ -63,7 +72,7 @@ void			md5_from_fd(t_md5_flags *flags, int fd, char *name)
 	if (fd == 0 && (flags->flag_p > 1))
 	{
 		word = make_word((unsigned char *)"", 0);
-		word = flags->f(word);
+		print_result(word = flags->f(word));
 		ft_printf("\n");
 		free(word);
 		return ;
@@ -72,7 +81,7 @@ void			md5_from_fd(t_md5_flags *flags, int fd, char *name)
 	(length = read_from_fd(fd, &line));
 	(fd == 0 && flags->flag_p) ? (ft_printf("%s", line)) : 0;
 	word = make_word(line, length);
-	word = flags->f(word);
+	print_result(word = flags->f(word));
 	(fd != 0 && flags->flag_r && !flags->flag_q) ? ft_printf(" %s", name) : 0;
 	ft_printf("\n");
 	free(word);

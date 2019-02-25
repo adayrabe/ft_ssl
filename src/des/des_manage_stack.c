@@ -1,6 +1,5 @@
 #include "ssl_des_helper_functions.h"
 
-
 static void		push(t_des_stack **head, char *name,
 	t_word			*(*f)(t_word *word))
 {
@@ -13,7 +12,7 @@ static void		push(t_des_stack **head, char *name,
 	*head = temp;
 }
 
-void des_free_stack(t_des_stack **head)
+void			des_free_stack(t_des_stack **head)
 {
 	t_des_stack *temp;
 
@@ -32,5 +31,6 @@ t_des_stack		*des_make_stack(void)
 
 	head = NULL;
 	push(&head, NULL, NULL);
+	push(&head, "des-ecb", ssl_des_ecb);
 	return (head);
 }

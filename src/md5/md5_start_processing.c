@@ -33,30 +33,6 @@ static t_md5_flags	*create_flag(t_word			*(*f)(t_word *word),
 	return (flags);
 }
 
-// static int		print_error(t_md5_stack **head, char *name)
-// {
-// 	t_md5_stack *temp;
-
-// 	ft_printf("ft_ssl: Error: '%s' is an invalid command.\n\nStandart \
-// commands:\n\nMessage Digest commands:\n", name);
-// 	temp = *head;
-// 	while (temp->name != NULL)
-// 	{
-// 		ft_printf("%s\n", temp->name);
-// 		temp = temp->next;
-// 	}
-// 	ft_printf("\nCipher commands:\n\n");
-// 	while ((*head)->name != NULL)
-// 	{
-// 		temp = (*head)->next;
-// 		ft_strdel(&((*head)->name));
-// 		free(*head);
-// 		*head = temp;
-// 	}
-// 	free(*head);
-// 	return (0);
-// }
-
 static void		read_from_files(int i, char **av, int ac, t_md5_flags *flags)
 {
 	int fd;
@@ -102,15 +78,21 @@ static void		md5_parce_args(t_md5_flags *flags, char **av, int ac)
 void			md5_start_processing(int ac, char **av, char read_from_fd)
 {
 	t_md5_flags		*flags;
-	t_md5_stack	*head;
-	t_md5_stack	*temp;
+	t_md5_stack		*head;
+	t_md5_stack		*temp;
 
 	head = md5_make_stack();
 	temp = head;
 	while (temp->name != NULL && ft_strcmp(av[0], temp->name))
 		temp = temp->next;
 	if (temp->name == NULL)
-		des_start_processing(ac, av, read_from_fd, &head) ;
+	{
+		des_start_processing(ac, av, read_from_fd, &head);
+		if (!read_from_fd)
+			exit(0);
+		else
+			return ;
+	}
 	flags = create_flag(temp->f, temp->name);
 	flags->read_from_fd = read_from_fd;
 	md5_free_stack(&head);

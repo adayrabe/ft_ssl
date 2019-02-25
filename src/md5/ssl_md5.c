@@ -143,7 +143,7 @@ static int			md5_init_m_arr(t_word *word, unsigned int **m_arr,
 	size_t	curr_length;
 
 	i = -1;
-	curr_length = word->length / 8 - (*processed_amount);
+	curr_length = word->length - (*processed_amount);
 	last = 0;
 	while (++i < 16 && !(j = 0) &&
 		!(m_arr[0][i] = 0))
@@ -157,8 +157,8 @@ static int			md5_init_m_arr(t_word *word, unsigned int **m_arr,
 		m_arr[0][last / 4] += (size_t)ft_pow(2, (last % 4 + 1) * 8 - 1);
 	if (curr_length < 56)
 	{
-		m_arr[0][14] = word->length % ft_pow(2, 31);
-		m_arr[0][15] = word->length >> 32;
+		m_arr[0][14] = (word->length * 8) % ft_pow(2, 31);
+		m_arr[0][15] = (word->length * 8) >> 32;
 		return (2);
 	}
 	return (curr_length < 64);
@@ -217,9 +217,9 @@ t_word *ssl_md5(t_word *word)
 			hash_values[i] /= 256;
 			j++;
 		}
-	i = -1;
-	while (++i < 16)
-		ft_printf("%.2x", res[i]);
+	// i = -1;
+	// while (++i < 16)
+	// 	ft_printf("%.2x", res[i]);
 	free(hash_values);
 	free(word);
 	return (make_word(res, 16));

@@ -34,7 +34,7 @@ static unsigned int	*sha256_init_hash_values(void)
 	return (hash_values);
 }
 
-t_word *				ssl_sha256(t_word *word)
+t_word				*ssl_sha256(t_word *word)
 {
 	unsigned int	*hash_values;
 	int				i;
@@ -55,9 +55,9 @@ t_word *				ssl_sha256(t_word *word)
 			hash_values[i] /= 256;
 		}
 	}
-	i = -1;
-	while (++i < 32)
-		ft_printf("%.2x", res[i]);
+	// i = -1;
+	// while (++i < 32)
+	// 	ft_printf("%.2x", res[i]);
 	free(hash_values);
 	free(word);
 	return (make_word(res, 32));

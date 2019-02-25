@@ -53,7 +53,7 @@ static int		sha256_init_w_arr(t_word *word, unsigned int **w_arr,
 	int				j;
 	size_t			last_byte;
 
-	curr_length = word->length / 8 - (*processed_amount);
+	curr_length = word->length - (*processed_amount);
 	i = 0;
 	last_byte = 0;
 	while (i < 16 && ++i && !(j = 0))
@@ -68,8 +68,8 @@ static int		sha256_init_w_arr(t_word *word, unsigned int **w_arr,
 					(size_t)ft_pow(2, (4 - last_byte % 4) * 8 - 1);
 	if (curr_length < 56)
 	{
-		w_arr[0][14] = word->length >> 32;
-		w_arr[0][15] = word->length % ft_pow(2, 31);
+		w_arr[0][14] = (word->length * 8) >> 32;
+		w_arr[0][15] = (word->length * 8) % ft_pow(2, 31);
 	}
 	sha256_append_w_arr(w_arr);
 	return ((curr_length < 64) + (curr_length < 56));

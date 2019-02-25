@@ -61,7 +61,7 @@ static int		sha512_init_w_arr(t_word *word, unsigned long **w_arr,
 	int				j;
 	size_t			last_byte;
 
-	curr_length = word->length / 8 - (*processed_amount);
+	curr_length = word->length - (*processed_amount);
 	i = 0;
 	last_byte = 0;
 	while (i < 16 && ++i && !(j = 0))
@@ -75,8 +75,8 @@ static int		sha512_init_w_arr(t_word *word, unsigned long **w_arr,
 		w_arr[0][last_byte / 8] += ft_pow(2, (8 - last_byte % 8) * 8 - 1);
 	if (curr_length < 112)
 	{
-		w_arr[0][14] = ((word->length) >> 63) >> 1;
-		w_arr[0][15] = word->length % ft_pow(2, 63);
+		w_arr[0][14] = ((word->length * 8) >> 63) >> 1;
+		w_arr[0][15] = (word->length * 8) % ft_pow(2, 63);
 		ft_printf("%lu\n", w_arr[0][14]);
 	}
 	sha512_append_w_arr(w_arr);

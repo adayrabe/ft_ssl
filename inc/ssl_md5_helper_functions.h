@@ -22,6 +22,18 @@ typedef struct			s_md5_stack
 
 }						t_md5_stack;
 
+typedef struct	s_md5_flags
+{
+	char			*name;
+	t_word			*(*f)(t_word *word);
+	char			flag_r;
+	char			flag_q;
+	int				flag_p;
+	char			flag_b;
+	char			write_from_stdin;
+	char			read_from_fd;
+}				t_md5_flags;
+
 unsigned int			*sha256_start_processing(t_word *word,
 		unsigned int *hash_values);
 unsigned long			rot_r(unsigned long value, int amount, int bits);
@@ -30,7 +42,6 @@ void					md5_from_fd(t_md5_flags *flags, int fd, char *name);
 unsigned long			*sha512_start_processing(t_word *word,
 			unsigned long *hash_values);
 t_md5_stack				*md5_make_stack(void);
-t_word					*make_word(unsigned char *word, size_t length);
 void	des_start_processing(int ac, char **av, char read_from_fd,
 	t_md5_stack **head_md5);
 void md5_free_stack(t_md5_stack **head);
