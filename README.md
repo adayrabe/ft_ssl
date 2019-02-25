@@ -1,4 +1,4 @@
-#ft_ssl
+# ft_ssl
 Usage: ./ft_ssl [Message Digest Commands [Messagge Digest flags]]
 or
 ./ft_ssl [Cipher Commands [Cipher flags]]
