@@ -7,7 +7,10 @@
 
 	In case if there is no possible arguments, the arguments will be read form STDIN (as in OpenSSL).
 
-	This project recreates the OpenSSL's behaviour of various functions. In the md folder, there will be Message Digest commands, in the des folder there will be Cipher commands.
+	This project recreates the OpenSSL's behaviour of various functions. In the md folder will be Message Digest commands, in the des folder will be Cipher commands.
+
+	The only available functions are: read, write, malloc, free, exit, strerr and fstat
+	All the other functions are written only using these functions. Most of them are in my libftprintf folder (check my libftprintf project to see which functions I implemented there).
 
 	Message Digest Commands available:
 	md5
