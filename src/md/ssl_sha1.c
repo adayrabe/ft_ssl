@@ -75,7 +75,7 @@ static void		sha1_main_loop(unsigned int **temp,
 	}
 }
 
-unsigned int	*sha1_start_processing(t_word *word,
+static unsigned int	*sha1_start_processing(t_word *word,
 	unsigned int *hash_values)
 {
 	unsigned int	*temp_values;
@@ -109,9 +109,8 @@ t_word				*ssl_sha1(t_word *word)
 {
 	unsigned int	*hash_values;
 	int				i;
-	unsigned char *res;
-	int j;
-
+	unsigned char	*res;
+	int				j;
 
 	hash_values = (unsigned int *)malloc(5 * sizeof(unsigned int));
 	hash_values[0] = 0x67452301;

@@ -2,7 +2,7 @@
 #include <errno.h>
 # include <fcntl.h>
 
-void print_flag_error(t_des_flags *flags, int num)
+void					print_flag_error(t_des_flags *flags, int num)
 {
 	char **messages;
 
@@ -30,7 +30,7 @@ vector in hex is the next argument");
 	exit(0);
 }
 
-void get_fd(t_des_flags *flags, char **av, int ac, int *i)
+static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 {
 	char c;
 
@@ -44,10 +44,10 @@ void get_fd(t_des_flags *flags, char **av, int ac, int *i)
 		flags->output_fd = open(av[*i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 }
 
-unsigned long make_num(char *str, bool *error)
+static unsigned long	make_num(char *str, bool *error)
 {
-	unsigned int j;
-	unsigned long num;
+	unsigned int	j;
+	unsigned long	num;
 
 	j = -1;
 	num = 0;
@@ -67,11 +67,12 @@ unsigned long make_num(char *str, bool *error)
 	return (num);
 }
 
-void get_number(t_des_flags *flags, char **av, int ac, int *i)
+static void				get_number(t_des_flags *flags, char **av, int ac,
+	int *i)
 {
-	char c;
-	unsigned long num;
-	bool error;
+	char			c;
+	unsigned long	num;
+	bool			error;
 
 	c = av[*i][1];
 	(*i)++;
@@ -86,7 +87,8 @@ void get_number(t_des_flags *flags, char **av, int ac, int *i)
 		(error) ? print_flag_error(flags, 6) : (flags->vector = num);
 }
 
-void des_parce_flags(t_des_flags *flags, char **av, int ac, int *i)
+void					des_parce_flags(t_des_flags *flags, char **av, int ac,
+	int *i)
 {
 	if (ft_strlen(av[*i]) != 2)
 		print_flag_error(flags, 0);

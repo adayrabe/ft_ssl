@@ -30,6 +30,6 @@ t_des_stack		*des_make_stack(void);
 void			des_free_stack(t_des_stack **head);
 void			des_parce_flags(t_des_flags *flags, char **av,
 	int ac, int *i);
-void print_flag_error(t_des_flags *flags, int num);
-unsigned long make_num(char *str, bool *error);
-unsigned long pbkdf2(char *pass, unsigned long salt, int c);
+void			print_flag_error(t_des_flags *flags, int num);
+unsigned long	pbkdf2(char *pass, unsigned long salt, int c);
+void			des_parce_arguments(t_des_flags *flags, char **av, int ac);

@@ -1,22 +1,10 @@
 #include "ssl_des_helper_functions.h"
 
-// void do_xor(unsigned char **str, unsigned char a, t_word *key)
-// {
-// 	unsigned long i;
-
-// 	i = -1;
-// 	while (++i < 64)
-// 		if (i > key->length)
-// 			str[0][i] = a;
-// 		else
-// 			str[0][i] = key->word[i] ^ a;
-// }
-
-unsigned char *do_xor(unsigned char **str1, unsigned char *str2, unsigned int l1,
-	unsigned int l2)
+static unsigned char	*do_xor(unsigned char **str1, unsigned char *str2,
+	unsigned int l1, unsigned int l2)
 {
-	unsigned long i;
-	unsigned char *res;
+	unsigned long	i;
+	unsigned char	*res;
 
 	i = -1;
 	res = ft_str_unsigned_new(l1);
@@ -29,11 +17,12 @@ unsigned char *do_xor(unsigned char **str1, unsigned char *str2, unsigned int l1
 	return (res);
 }
 
-t_word *hmac(t_word *(*f)(t_word *word), t_word *key, t_word *message)
+static t_word			*hmac(t_word *(*f)(t_word *word), t_word *key,
+	t_word *message)
 {
-	unsigned char *o_key_pad;
-	unsigned char *i_key_pad;
-	t_word *temp;
+	unsigned char	*o_key_pad;
+	unsigned char	*i_key_pad;
+	t_word			*temp;
 
 	if (key->length > 64)
 		(key = f(key));
@@ -58,10 +47,10 @@ t_word *hmac(t_word *(*f)(t_word *word), t_word *key, t_word *message)
 	return (temp);
 }
 
-static unsigned long make_key(t_word **word)
+static unsigned long	make_key(t_word **word)
 {
-	unsigned long res;
-	int i;
+	unsigned long	res;
+	int				i;
 
 	res = 0;
 	i = 0;
@@ -75,10 +64,10 @@ static unsigned long make_key(t_word **word)
 	return (res);
 }
 
-unsigned char *make_first(unsigned long salt)
+static unsigned char	*make_first(unsigned long salt)
 {
-	unsigned char *first;
-	int i;
+	unsigned char	*first;
+	int				i;
 
 	first = ft_str_unsigned_new(12);
 	i = -1;
@@ -91,13 +80,13 @@ unsigned char *make_first(unsigned long salt)
 	return(first);
 }
 
-unsigned long pbkdf2(char *pass, unsigned long salt, int c)
+unsigned long			pbkdf2(char *pass, unsigned long salt, int c)
 {
-	t_word	*temp;
-	t_word	*key;
-	int		i;
-	unsigned char *first;
-	t_word	*res;
+	t_word			*temp;
+	t_word			*key;
+	int				i;
+	unsigned char	*first;
+	t_word			*res;
 
 	key = make_word((unsigned char *)pass, ft_strlen(pass));
 	first = make_first(salt);
