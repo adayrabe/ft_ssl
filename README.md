@@ -28,6 +28,10 @@
 	-b: print in binary
 
 	Cipher commands available:
+	des (the same as des-cbc)
+	des-ecb
+	des-cbc
+	des-cfb
 
 	Cipher flags available (for base64 command):
 	-d, decode mode

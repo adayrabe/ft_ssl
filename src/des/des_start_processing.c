@@ -30,7 +30,8 @@ commands:\n\nMessage Digest commands:\n", name);
 }
 
 static t_des_flags	init_flags(char read_from_fd, char *func_name, 
-	t_word *(*f)(t_word *word))
+		unsigned long	(*f)(t_word *ciphertext, unsigned long prev,
+		unsigned long curr, unsigned long key))
 {
 	t_des_flags res;
 
@@ -49,6 +50,30 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	res.func_name = ft_strdup(func_name);
 	res.function = f;
 	return (res);
+}
+
+static void			des_start_function(t_des_flags flags)
+{
+	unsigned char	*word;
+	size_t			length;
+	t_word			*res;
+	size_t			i;
+
+	word = NULL;
+	length = read_from_fd(flags.input_fd, &word);
+	res = make_word(word, length);
+	res = ssl_des(res, flags.key, flags.function, flags.vector);
+	ft_str_unsigned_del(&word);
+	// i = -1;
+	// while (++i < res->length)
+	// 	ft_printf("%.2x", res->word[i]);
+	// ft_printf("\n");
+	i = -1;
+	while (++i < res->length)
+		ft_printf("%c", res->word[i]);
+	// ft_printf("\n");
+	ft_str_unsigned_del(&(res->word));
+	free(res);
 }
 
 void				des_start_processing(int ac, char **av, char read_from_fd,
@@ -74,7 +99,9 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 		flags.base64, flags.encrypt, flags.input_fd,
 		flags.output_fd, flags.key, flags.has_key, flags.pass, flags.salt, flags.has_salt,
 		flags.vector, flags.has_vector, flags.func_name);
+	des_start_function(flags);
 	ft_strdel(&(flags.pass));
+	ft_strdel(&(flags.func_name));
 	close(flags.input_fd);
 	close(flags.output_fd);
 }

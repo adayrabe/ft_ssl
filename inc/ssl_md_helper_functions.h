@@ -40,10 +40,10 @@ unsigned long			rot_r(unsigned long value, int amount, int bits);
 int						md_parce_flags(t_md_flags *flags, char **av, int ac, int *i);
 void					md_from_fd(t_md_flags *flags, int fd, char *name);
 unsigned long			*sha512_start_processing(t_word *word,
-			unsigned long *hash_values);
+		unsigned long *hash_values);
 t_md_stack				*md_make_stack(void);
-void	des_start_processing(int ac, char **av, char read_from_fd,
-	t_md_stack **head_md);
-void md_free_stack(t_md_stack **head);
+void					des_start_processing(int ac, char **av,
+	char read_from_fd, t_md_stack **head_md);
+void					md_free_stack(t_md_stack **head);
 
 #endif
