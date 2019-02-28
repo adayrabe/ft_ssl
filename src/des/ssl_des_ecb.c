@@ -121,28 +121,22 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 	size_t			i;
 	unsigned char	*ciphertext;
 	t_word			*temp;
-	// unsigned long curr;
 
 	i = 0;
 	ciphertext = NULL;
-	// ft_printf("%s\n", (char *)word->word);
-	// curr = vector;
 	ciphertext = ft_str_unsigned_new(0);
 	temp = make_word(ciphertext, 0);
 	while (i <= word->length)
 	{
 		if (i == word->length && !flags.encrypt)
 			break ;
-		// prev = curr;
-		// curr = make_message(word->word, word->length, i);
-		// curr = encode_block(curr, key);
 		flags.function(temp, &flags, i,  word);
-		// add_ciphertext(temp, curr);
 		i += 8;
 	}
+	if (flags.base64)
+		base64(temp, &flags, 0, temp);
 	ciphertext = temp->word;
 	i = temp->length;
-	// ft_printf("%d\n", i);
 	free(temp);
 	free(word); 
 	return(make_word(ciphertext, i));

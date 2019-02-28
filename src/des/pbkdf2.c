@@ -59,6 +59,7 @@ static unsigned long	make_key(t_word **word)
 		res = res * 256 + (*word)->word[i];
 		i++;
 	}
+	ft_str_unsigned_del(&((*word)->word));
 	free(*word);
 	*word = NULL;
 	return (res);
