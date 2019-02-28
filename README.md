@@ -28,6 +28,7 @@
 	-b: print in binary
 
 	Cipher commands available:
+	base64
 	des (the same as des-cbc)
 	des-ecb
 	des-cbc

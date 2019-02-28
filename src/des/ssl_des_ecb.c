@@ -18,7 +18,6 @@ unsigned long make_message(unsigned char *str, unsigned long length, size_t i)
 		else
 			res = res *  256 + difference; //right one
 				// res = res *  256 ; // to check online
-
 		i++;
 		temp++;
 	}
@@ -96,13 +95,6 @@ void	ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
 		flags->vector = res;
 	else
 		flags->vector = temp;
-
-	// unsigned long res;
-
-	// res = code_block(flags->vector, flags->key, flags->encrypt);
-	// res = curr ^ res;
-	// add_ciphertext(ciphertext, res);
-	// flags->vector = res;
 }
 
 void	ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
@@ -126,6 +118,13 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 	ciphertext = NULL;
 	ciphertext = ft_str_unsigned_new(0);
 	temp = make_word(ciphertext, 0);
+	if (flags.base64 && !flags.encrypt)
+		{ft_printf("\nHERE\n");
+		base64(word, &flags, 0, word);
+	}
+	// ft_printf("\nHERE\n");
+	ft_printf("%d\n", word->length);
+	// ft_printf("%s\n", (char *)word->word);
 	while (i <= word->length)
 	{
 		if (i == word->length && !flags.encrypt)
@@ -133,10 +132,14 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 		flags.function(temp, &flags, i,  word);
 		i += 8;
 	}
-	if (flags.base64)
+	if (flags.base64 && flags.encrypt)
+	{
+		ft_printf("ENCRYPT\n");
 		base64(temp, &flags, 0, temp);
+	}
 	ciphertext = temp->word;
 	i = temp->length;
+	ft_printf("LENGTH: %d\n", i);
 	free(temp);
 	free(word); 
 	return(make_word(ciphertext, i));
