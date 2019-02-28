@@ -47,13 +47,7 @@ t_word *ssl_sha384(t_word *word)
 			hash_values[i] /= 256;
 		}
 	}
-	free(hash_values);
-	// i = 0;
-	// while (i < 48)
-	// {
-	// 	ft_printf("%.2x", res[i]);
-	// 	i++;
-	// }		
+	free(hash_values);		
 	free(word);
 	return(make_word(res, 48));
 }

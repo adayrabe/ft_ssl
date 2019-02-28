@@ -25,105 +25,125 @@ unsigned long make_message(unsigned char *str, unsigned long length, size_t i)
 	return (res);
 }
 
-unsigned long	ssl_des_ecb(t_word *ciphertext, unsigned long prev,
-	unsigned long curr, unsigned long key)
+void add_ciphertext(t_word *ciphertext, unsigned long num)
 {
 	unsigned char	*temp;
-	int				i;
-	unsigned long	t;
+	int i;
 
 	temp = ft_str_unsigned_new(8);
-	curr = encode_block(curr, key);
 	i = -1;
-	t = curr;
 	while (++i < 8)
 	{
-		temp[7 - i] = t % 256;
-		t /= 256;
-	}
-	prev = 0;
-	ft_str_unsigned_concat(&(ciphertext->word), temp, ciphertext->length, 8);
-	ciphertext->length += 8;
-	ft_str_unsigned_del(&temp);
-	return(curr);
-}
-
-unsigned long	ssl_des_cbc(t_word *ciphertext, unsigned long vector,
-	unsigned long curr, unsigned long key)
-{
-	int				i;
-	unsigned char	*temp;
-	unsigned long	t;
-
-	temp = ft_str_unsigned_new(8);
-	curr = curr ^ vector;
-	curr = encode_block(curr, key);
-	// ft_printf("%lx\n", curr);
-	i = -1;
-	t = curr;
-	while (++i < 8)
-	{
-		temp[7 - i] = t % 256;
-		t /= 256;
+		temp[7 - i] = num % 256;
+		num /= 256;
 	}
 	ft_str_unsigned_concat(&(ciphertext->word), temp, ciphertext->length, 8);
 	ciphertext->length += 8;
 	ft_str_unsigned_del(&temp);
-	return (curr);
+
 }
 
-unsigned long	ssl_des_cfb(t_word *ciphertext, unsigned long vector,
-	unsigned long curr, unsigned long key)
+void	ssl_des_ecb(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
 {
-	int				i;
-	unsigned char	*temp;
-	unsigned long	t;
+	unsigned long res;
 
-	temp = ft_str_unsigned_new(8);
-	vector = encode_block(vector, key);
-	curr = curr ^ vector;
-	i = -1;
-	t = curr;
-	while (++i < 8)
-	{
-		temp[7 - i] = t % 256;
-		t /= 256;
-	}
-	ft_str_unsigned_concat(&(ciphertext->word), temp, ciphertext->length, 8);
-	ciphertext->length += 8;
-	ft_str_unsigned_del(&temp);
-	return (curr);
+	res = make_message(word->word, word->length, i);
+	res = code_block(res, flags->key, flags->encrypt);
+	add_ciphertext(ciphertext, res);
+	flags->vector = res;
 }
 
-t_word		*ssl_des(t_word *word, unsigned long key,
-	unsigned long (*f)(t_word *ciphertext, unsigned long prev,
-						unsigned long curr, unsigned long key),
-	unsigned long vector)
+void	ssl_des_cbc(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
 {
-	unsigned long	prev;
-	unsigned long	curr;
+	unsigned long res;
+	unsigned long temp;
+
+	res = make_message(word->word, word->length, i);
+	temp = res;
+	// res = i;
+	if (flags->encrypt)
+		res = res ^ flags->vector;
+	res = code_block(res, flags->key, flags->encrypt);
+	if (!flags->encrypt)
+		res = flags->vector ^ res;
+	add_ciphertext(ciphertext, res);
+	if (flags->encrypt)
+		flags->vector = res;
+	else
+		flags->vector = temp;
+}
+
+void	ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
+{
+	unsigned long res;
+	unsigned long temp;
+
+	res = 0;
+	if (i == word->length)
+		return ;
+	res = make_message(word->word, word->length, i);
+	flags->vector = code_block(flags->vector, flags->key, flags->encrypt);
+	if (!flags->encrypt)
+		temp = res;
+	res = res ^ flags->vector;
+	add_ciphertext(ciphertext, res);
+	if (ciphertext->length > word->length)
+		ciphertext->length = word->length;
+	if (flags->encrypt)
+		flags->vector = res;
+	else
+		flags->vector = temp;
+
+	// unsigned long res;
+
+	// res = code_block(flags->vector, flags->key, flags->encrypt);
+	// res = curr ^ res;
+	// add_ciphertext(ciphertext, res);
+	// flags->vector = res;
+}
+
+void	ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
+{
+	unsigned long res; 
+
+	res = make_message(word->word, word->length, i);
+	flags->vector = code_block(flags->vector, flags->key, flags->encrypt);
+	res = res ^ flags->vector;
+	add_ciphertext(ciphertext, res);
+}
+
+t_word		*ssl_des(t_word *word, t_des_flags flags)
+{
 	size_t			i;
 	unsigned char	*ciphertext;
 	t_word			*temp;
+	// unsigned long curr;
 
 	i = 0;
 	ciphertext = NULL;
-	curr = vector;
+	// ft_printf("%s\n", (char *)word->word);
+	// curr = vector;
 	ciphertext = ft_str_unsigned_new(0);
 	temp = make_word(ciphertext, 0);
 	while (i <= word->length)
 	{
-		prev = curr;
-		curr = make_message(word->word, word->length, i);
+		if (i == word->length && !flags.encrypt)
+			break ;
+		// prev = curr;
+		// curr = make_message(word->word, word->length, i);
 		// curr = encode_block(curr, key);
-		curr = f(temp, prev, curr, key);
-		ft_printf("CURR: %lx\n", curr);
+		flags.function(temp, &flags, i,  word);
+		// add_ciphertext(temp, curr);
 		i += 8;
 	}
 	ciphertext = temp->word;
 	i = temp->length;
 	// ft_printf("%d\n", i);
 	free(temp);
-	free(word);
+	free(word); 
 	return(make_word(ciphertext, i));
 }

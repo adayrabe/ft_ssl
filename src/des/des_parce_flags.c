@@ -2,7 +2,7 @@
 #include <errno.h>
 # include <fcntl.h>
 
-void					print_flag_error(t_des_flags *flags, int num)
+bool					print_flag_error(t_des_flags *flags, int num)
 {
 	char **messages;
 
@@ -27,7 +27,9 @@ vector in hex is the next argument");
 	free(messages);
 	ft_strdel(&(flags->func_name));
 	ft_strdel(&(flags->pass));
-	exit(0);
+	if (!flags->read_from_fd)
+		exit(0);
+	return (0);
 }
 
 static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
@@ -87,11 +89,11 @@ static void				get_number(t_des_flags *flags, char **av, int ac,
 		(error) ? print_flag_error(flags, 6) : (flags->vector = num);
 }
 
-void					des_parce_flags(t_des_flags *flags, char **av, int ac,
+bool					des_parce_flags(t_des_flags *flags, char **av, int ac,
 	int *i)
 {
-	if (ft_strlen(av[*i]) != 2)
-		print_flag_error(flags, 0);
+	if (ft_strlen(av[*i]) != 2 || av[*i][0] != '-')
+		return (print_flag_error(flags, 0));
 	if (av[*i][1] == 'd')
 		flags->encrypt = 0;
 	else if (av[*i][1] == 'i' || av[*i][1] == 'o')
@@ -107,8 +109,8 @@ void					des_parce_flags(t_des_flags *flags, char **av, int ac,
 		(*i)++;	
 		(*i == ac) ? print_flag_error(flags, 7) : 0;
 		flags->pass = ft_strdup(av[*i]);
-		// flags->has_key = 0;
 	}
 	else
-		print_flag_error(flags, 0);
+		return (print_flag_error(flags, 0));
+	return (1);
 }

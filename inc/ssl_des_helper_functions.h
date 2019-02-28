@@ -4,14 +4,6 @@
 # include "ssl_functions.h"
 # include <stdbool.h>
 
-typedef struct	s_des_stack
-{
-	char				*name;
-	unsigned long		(*f)(t_word *ciphertext, unsigned long prev,
-			unsigned long curr, unsigned long key);
-	struct s_des_stack	*next;
-}				t_des_stack;
-
 typedef struct	s_des_flags
 {
 	bool			base64;
@@ -27,22 +19,44 @@ typedef struct	s_des_flags
 	bool			has_vector;
 	char			*func_name;
 	char			read_from_fd;
-	unsigned long	(*function)(t_word *ciphertext, unsigned long prev,
-			unsigned long curr, unsigned long key);
+	void			(*function)(t_word *ciphertext, struct s_des_flags *flags,
+						size_t i, t_word *word);
 }				t_des_flags;
 
+typedef struct	s_des_stack
+{
+	char				*name;
+	void				(*f)(t_word *ciphertext, t_des_flags *flags,
+							size_t i, t_word *word);
+	struct s_des_stack	*next;
+}				t_des_stack;
+
+
+t_word			*ssl_des(t_word *word, t_des_flags flags);
 t_des_stack		*des_make_stack(void);
 void			des_free_stack(t_des_stack **head);
-void			des_parce_flags(t_des_flags *flags, char **av,
+bool			des_parce_flags(t_des_flags *flags, char **av,
 	int ac, int *i);
-void			print_flag_error(t_des_flags *flags, int num);
+bool			print_flag_error(t_des_flags *flags, int num);
 unsigned long	pbkdf2(char *pass, unsigned long salt, int c);
-void			des_parce_arguments(t_des_flags *flags, char **av, int ac);
-unsigned long	ssl_des_ecb(t_word *ciphertext, unsigned long prev,
-	unsigned long curr, unsigned long key);
-unsigned long	ssl_des_cbc(t_word *ciphertext, unsigned long prev,
-	unsigned long curr, unsigned long key);
-unsigned long	ssl_des_cfb(t_word *ciphertext, unsigned long vector,
-	unsigned long curr, unsigned long key);
-unsigned long	encode_block(unsigned long m, unsigned long key);
+bool			des_parce_arguments(t_des_flags *flags, char **av, int ac);
+void			ssl_des_ecb(t_word *ciphertext, t_des_flags *flags,
+						unsigned long curr, t_word *word);
+void			ssl_des_cbc(t_word *ciphertext, t_des_flags *flags,
+						unsigned long curr, t_word *word);
+void			ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
+						unsigned long curr, t_word *word);
+void			ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
+						unsigned long curr, t_word *word);
+unsigned long	code_block(unsigned long m, unsigned long key, bool enc);
+unsigned long	*get_subkeys(unsigned long key);
+// unsigned long	decode_block(unsigned long m, unsigned long key);
+
+extern int g_pc_one[56];
+extern int g_pc_two[48];
+extern int g_ip[64];
+extern int g_e[48];
+extern int g_s [8][64];
+extern int g_p[32];
+extern int g_ip_minus_one[64];
 #endif

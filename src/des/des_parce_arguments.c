@@ -80,19 +80,15 @@ static unsigned long	make_vector(char *pass, unsigned long salt)
 	return (key);
 }
 
-void					des_parce_arguments(t_des_flags *flags, char **av, int ac)
+bool					des_parce_arguments(t_des_flags *flags, char **av, int ac)
 {
 	int i;
 
 	i = 0;
 	while (++i < ac)
-		if (av[i][0] == '-')
-			des_parce_flags(flags, av, ac, &i);
-		else if (flags->read_from_fd == 0)
-			exit(0);
-		else
-			return ;
-	add_salt(flags);
+		if (!des_parce_flags(flags, av, ac, &i))
+			return (0);
+	(!flags->has_key) ? add_salt(flags) : 0;
 	(flags->has_key && !flags->has_vector && !flags->pass &&
 	(ft_strequ(flags->func_name, "des") ||
 	ft_strequ(flags->func_name, "des-cbc"))) ? print_flag_error(flags, 9) : 0;
@@ -105,4 +101,5 @@ password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	(!flags->has_key) ? (flags->key = make_key(flags->pass, flags->salt)) : 0;
 	if (!flags->has_vector)
 		flags->vector = make_vector(flags->pass, flags->salt);
+	return (1);
 }

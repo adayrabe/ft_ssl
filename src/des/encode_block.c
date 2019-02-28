@@ -124,7 +124,7 @@ int g_ip_minus_one[64] =
 	33, 1, 41, 9, 49, 17, 57, 25
 };
 
-unsigned long	permutate(unsigned long num, int *table, int length, int bits)
+static unsigned long	permutate(unsigned long num, int *table, int length, int bits)
 {
 	unsigned long res;
 	int i;
@@ -136,7 +136,7 @@ unsigned long	permutate(unsigned long num, int *table, int length, int bits)
 	return (res);
 }
 
-unsigned int	calculate(unsigned int r, unsigned long key)
+static unsigned int	calculate(unsigned int r, unsigned long key)
 {
 	unsigned int res;
 	unsigned long e;
@@ -160,7 +160,7 @@ unsigned int	calculate(unsigned int r, unsigned long key)
 	return(res);
 }
 
-unsigned long	make_subkey(unsigned long *c, unsigned long *d, int i)
+static unsigned long	make_subkey(unsigned long *c, unsigned long *d, int i)
 {
 	int bits;
 	unsigned long res;
@@ -195,7 +195,7 @@ unsigned long	*get_subkeys(unsigned long key)
 	return (res);
 }
 
-unsigned long	encode_block(unsigned long m, unsigned long key)
+unsigned long	code_block(unsigned long m, unsigned long key, bool enc)
 {
 	unsigned long	ip;
 	unsigned int	l;
@@ -212,7 +212,11 @@ unsigned long	encode_block(unsigned long m, unsigned long key)
 	{
 		temp = l;
 		l = r;
-		r = temp ^ calculate(r, subkeys[ip - 1]);
+		if (enc)
+			r = temp ^ calculate(r, subkeys[ip - 1]);
+		else
+			r = temp ^ calculate(r, subkeys[16 - ip]);
+
 	}
 	ip = ((unsigned long)r << 32) + l;
 	ip = permutate(ip, g_ip_minus_one, 64, 64);

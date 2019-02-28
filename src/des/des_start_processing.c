@@ -30,8 +30,8 @@ commands:\n\nMessage Digest commands:\n", name);
 }
 
 static t_des_flags	init_flags(char read_from_fd, char *func_name, 
-		unsigned long	(*f)(t_word *ciphertext, unsigned long prev,
-		unsigned long curr, unsigned long key))
+		void	(*f)(t_word *ciphertext, t_des_flags *flags,
+					size_t i, t_word *word))
 {
 	t_des_flags res;
 
@@ -62,7 +62,7 @@ static void			des_start_function(t_des_flags flags)
 	word = NULL;
 	length = read_from_fd(flags.input_fd, &word);
 	res = make_word(word, length);
-	res = ssl_des(res, flags.key, flags.function, flags.vector);
+	res = ssl_des(res, flags);
 	ft_str_unsigned_del(&word);
 	// i = -1;
 	// while (++i < res->length)
@@ -94,7 +94,8 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	md_free_stack(head_md);
 	flags = init_flags(read_from_fd, temp_des->name, temp_des->f);
 	des_free_stack(&head_des);
-	des_parce_arguments(&flags, av, ac);
+	if (!des_parce_arguments(&flags, av, ac))
+		return ;
 	ft_printf(" base64: %d\n encrypt: %d\n input_fd: %d\n output_fd: %d\n key: %lx\n has_key: %d\n pass: %s\n salt: %lx\n has_salt: %d\n vector: %lx\n has_vector: %d\n func_name: %s\n",
 		flags.base64, flags.encrypt, flags.input_fd,
 		flags.output_fd, flags.key, flags.has_key, flags.pass, flags.salt, flags.has_salt,

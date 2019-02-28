@@ -1,8 +1,8 @@
 #include "ssl_des_helper_functions.h"
 
 static void		push(t_des_stack **head, char *name,
-	unsigned long	(*f)(t_word *ciphertext, unsigned long prev,
-			unsigned long curr, unsigned long key))
+	void	(*f)(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word))
 {
 	t_des_stack *temp;
 
@@ -36,5 +36,6 @@ t_des_stack		*des_make_stack(void)
 	push(&head, "des-cbc", ssl_des_cbc);
 	push(&head, "des", ssl_des_cbc);
 	push(&head, "des-cfb", ssl_des_cfb);
+	push(&head, "des-ofb", ssl_des_ofb);
 	return (head);
 }

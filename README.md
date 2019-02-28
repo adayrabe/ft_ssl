@@ -44,12 +44,11 @@
 	-d, decrypt mode
 	-e, encrypt mode (default)
 	-i, input file for message
-	-k, key in hex is the next arguement.
-	(Behave like openssl des -K not openssl des -k)
+	-k, key in hex is the next arguement. (Behave like openssl des -K)
 	-o, output file for message
-	-p, password in ascii is the next argument. (Behave like a modifiedd openssl des -pass not like openssl des -p or -P)
+	-p, password in ascii is the next argument. (Behave like a modifiedd openssl des -pass)
 	-s, the salt in hex is the next argument. (Behave like openssl des -S)
-	-v, initialization vector in hex is the next argument. (Behave like openssl des -iv not openssl des -v)
+	-v, initialization vector in hex is the next argument. (Behave like openssl des -iv)
 
 	Other functions available:
 	pbkdf2 (for now works only for computing hashes of 16 bytes long, planning to make a proper pbkdf2 function in the future)

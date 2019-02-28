@@ -12,7 +12,7 @@
 
 #include "ssl_md_helper_functions.h"
 
-static unsigned int k_arr[64] = (unsigned int[64])
+static unsigned int g_k_arr[64] = (unsigned int[64])
 	{
 		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 		0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
@@ -88,7 +88,7 @@ static void		sha256_main_loop(unsigned int **temp,
 		temp1 = temp[0][7] + (rot_r(temp[0][4], 6, 32) ^
 			rot_r(temp[0][4], 11, 32) ^ rot_r(temp[0][4], 25, 32));
 		temp1 += ((temp[0][4] & temp[0][5]) ^ (~temp[0][4] & temp[0][6]));
-		temp1 += k_arr[i] + w_arr[i];
+		temp1 += g_k_arr[i] + w_arr[i];
 		temp2 = rot_r(temp[0][0], 2, 32) ^ rot_r(temp[0][0], 13, 32) ^
 		rot_r(temp[0][0], 22, 32);
 		temp2 += (temp[0][0] & temp[0][1]) ^ (temp[0][0] & temp[0][2]) ^
