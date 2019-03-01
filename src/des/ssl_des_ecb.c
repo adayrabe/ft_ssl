@@ -77,35 +77,47 @@ void	ssl_des_cbc(t_word *ciphertext, t_des_flags *flags,
 void	ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
 	size_t i, t_word *word)
 {
-	unsigned long res;
-	unsigned long temp;
+	unsigned long	res;
+	unsigned long	temp;
+	bool			enc;
 
 	res = 0;
-	if (i == word->length)
+	enc = flags->encrypt;
+	flags->encrypt = 1;
+	if (i == word->length && enc)
 		return ;
 	res = make_message(word->word, word->length, i);
 	flags->vector = code_block(flags->vector, flags->key, flags->encrypt);
-	if (!flags->encrypt)
+	if (!enc)
 		temp = res;
 	res = res ^ flags->vector;
 	add_ciphertext(ciphertext, res);
 	if (ciphertext->length > word->length)
 		ciphertext->length = word->length;
-	if (flags->encrypt)
+	if (enc)
 		flags->vector = res;
 	else
 		flags->vector = temp;
+	flags->encrypt = enc;
 }
 
 void	ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
 	size_t i, t_word *word)
 {
-	unsigned long res; 
+	unsigned long	res;
+	bool			enc;
 
+	enc = flags->encrypt;
+	flags->encrypt = 1;
+	if (i == word->length && enc)
+		return ;
 	res = make_message(word->word, word->length, i);
 	flags->vector = code_block(flags->vector, flags->key, flags->encrypt);
 	res = res ^ flags->vector;
 	add_ciphertext(ciphertext, res);
+	if (ciphertext->length > word->length)
+		ciphertext->length = word->length;
+	flags->encrypt = enc;
 }
 
 t_word		*ssl_des(t_word *word, t_des_flags flags)
@@ -119,12 +131,7 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 	ciphertext = ft_str_unsigned_new(0);
 	temp = make_word(ciphertext, 0);
 	if (flags.base64 && !flags.encrypt)
-		{ft_printf("\nHERE\n");
 		base64(word, &flags, 0, word);
-	}
-	// ft_printf("\nHERE\n");
-	ft_printf("%d\n", word->length);
-	// ft_printf("%s\n", (char *)word->word);
 	while (i <= word->length)
 	{
 		if (i == word->length && !flags.encrypt)
@@ -133,10 +140,7 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 		i += 8;
 	}
 	if (flags.base64 && flags.encrypt)
-	{
-		ft_printf("ENCRYPT\n");
 		base64(temp, &flags, 0, temp);
-	}
 	ciphertext = temp->word;
 	i = temp->length;
 	ft_printf("LENGTH: %d\n", i);

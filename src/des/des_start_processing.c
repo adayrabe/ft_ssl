@@ -64,14 +64,17 @@ static void			des_start_function(t_des_flags flags)
 	res = make_word(word, length);
 	res = ssl_des(res, flags);
 	ft_str_unsigned_del(&word);
-	// i = -1;
-	// while (++i < res->length)
-	// 	ft_printf("%.2x", res->word[i]);
-	// ft_printf("\n");
 	i = -1;
 	while (++i < res->length)
-		ft_printf("%c", res->word[i]);
-	// ft_printf("\n");
+	{
+		ft_putchar_fd(res->word[i], flags.output_fd);//("%c", res->word[i]);
+		if ((ft_strequ("base64", flags.func_name) || flags.base64) &&
+			i % 64 == 63)
+			ft_putchar_fd('\n', flags.output_fd);
+	}
+	if (i % 64 != 0 && i &&
+			(ft_strequ("base64", flags.func_name) || flags.base64))
+		ft_putchar_fd('\n', flags.output_fd);
 	ft_str_unsigned_del(&(res->word));
 	free(res);
 }

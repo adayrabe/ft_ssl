@@ -80,7 +80,8 @@ static unsigned long	make_vector(char *pass, unsigned long salt)
 	return (key);
 }
 
-bool					des_parce_arguments(t_des_flags *flags, char **av, int ac)
+bool					des_parce_arguments(t_des_flags *flags, char **av,
+	int ac)
 {
 	int i;
 
@@ -88,18 +89,21 @@ bool					des_parce_arguments(t_des_flags *flags, char **av, int ac)
 	while (++i < ac)
 		if (!des_parce_flags(flags, av, ac, &i))
 			return (0);
-	(!flags->has_key) ? add_salt(flags) : 0;
+	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
+		add_salt(flags);
 	(flags->has_key && !flags->has_vector && !flags->pass &&
-	(ft_strequ(flags->func_name, "des") ||
-	ft_strequ(flags->func_name, "des-cbc"))) ? print_flag_error(flags, 9) : 0;
-	if (!flags->has_key && !flags->pass)
+	!ft_strequ("base64", flags->func_name) &&
+	!ft_strequ(flags->func_name, "des-ecb")) ? print_flag_error(flags, 9) : 0;
+	if (!flags->has_key && !flags->pass &&
+		!ft_strequ("base64", flags->func_name))
 	{
 		flags->pass = ft_strdup(getpass("enter des-ecb encryption password:"));
 		(!ft_strequ(getpass("Verifying - enter des-ecb encryption \
 password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	}
-	(!flags->has_key) ? (flags->key = make_key(flags->pass, flags->salt)) : 0;
-	if (!flags->has_vector)
+	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
+		(flags->key = make_key(flags->pass, flags->salt));
+	if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
 		flags->vector = make_vector(flags->pass, flags->salt);
 	return (1);
 }

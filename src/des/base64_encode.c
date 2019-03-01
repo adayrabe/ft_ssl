@@ -16,8 +16,8 @@ static char				convert_encode(size_t number)
 static void				transform_encode(unsigned char **line, size_t i,
 	unsigned char *word, size_t len)
 {
-	size_t temp;
-	int	pad;
+	size_t	temp;
+	int		pad;
 
 	pad = 0;
 	temp = word[i];
@@ -44,9 +44,9 @@ static void				transform_encode(unsigned char **line, size_t i,
 
 static unsigned char	*ssl_base64_encode(unsigned char *word, size_t length)
 {
-	unsigned char *res;
-	size_t i;
-	size_t len;
+	unsigned char	*res;
+	size_t			i;
+	size_t			len;
 
 	i = 0;
 	len = (length + 2) / 3 * 4;
