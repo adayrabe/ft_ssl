@@ -10,7 +10,10 @@ typedef struct	s_des_flags
 	bool			encrypt;
 	int				input_fd;
 	int				output_fd;
-	unsigned long	key;
+	unsigned long	key1;
+	unsigned long	key2;
+	unsigned long	key3;
+	unsigned long	key4;
 	bool			has_key;
 	char			*pass;
 	unsigned long	salt;
@@ -53,5 +56,4 @@ void			base64(t_word *ciphertext, t_des_flags *flags,
 unsigned long	code_block(unsigned long m, unsigned long key, bool enc);
 unsigned long	*get_subkeys(unsigned long key);
 unsigned char	*ssl_base64_decode(unsigned char *word, size_t length);
-
 #endif

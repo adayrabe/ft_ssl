@@ -171,7 +171,7 @@ static unsigned long	make_subkey(unsigned long *c, unsigned long *d, int i)
 	else
 		bits = 2;
 	*c = (((*c) << bits) | (*c >> (28 - bits))) & 0xfffffff;
-	*d = (((*d) << bits) | (*d >> (28 - bits)))& 0xfffffff;
+	*d = (((*d) << bits) | (*d >> (28 - bits))) & 0xfffffff;
 	cd = (*c << 28) | (*d);
 	res = permutate(cd, g_pc_two, 48, 56);
 	return (res);

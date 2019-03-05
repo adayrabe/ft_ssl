@@ -39,7 +39,10 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	res.encrypt = 1;
 	res.input_fd = 0;
 	res.output_fd = 0;
-	res.key = 0;
+	res.key1 = 0;
+	res.key2 = 0;
+	res.key3 = 0;
+	res.key4 = 0;
 	res.has_key = 0;
 	res.pass = NULL;
 	res.salt = 0;
@@ -99,13 +102,13 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	des_free_stack(&head_des);
 	if (!des_parce_arguments(&flags, av, ac))
 		return ;
-	ft_printf(" base64: %d\n encrypt: %d\n input_fd: %d\n output_fd: %d\n key: %lx\n has_key: %d\n pass: %s\n salt: %lx\n has_salt: %d\n vector: %lx\n has_vector: %d\n func_name: %s\n",
+	ft_printf(" base64: %d\n encrypt: %d\n input_fd: %d\n output_fd: %d\n key1: %lx\n key2: %lx\n key3: %lx\n key4: %lx\n has_key: %d\n pass: %s\n salt: %lx\n has_salt: %d\n vector: %lx\n has_vector: %d\n func_name: %s\n",
 		flags.base64, flags.encrypt, flags.input_fd,
-		flags.output_fd, flags.key, flags.has_key, flags.pass, flags.salt, flags.has_salt,
+		flags.output_fd, flags.key1, flags.key2, flags.key3, flags.key4, flags.has_key, flags.pass, flags.salt, flags.has_salt,
 		flags.vector, flags.has_vector, flags.func_name);
 	des_start_function(flags);
 	ft_strdel(&(flags.pass));
 	ft_strdel(&(flags.func_name));
-	close(flags.input_fd);
-	close(flags.output_fd);
+	(flags.input_fd) ? close(flags.input_fd) : 0;
+	(flags.output_fd) ? close(flags.output_fd) : 0;
 }

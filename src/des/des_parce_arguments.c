@@ -28,56 +28,56 @@ static void			add_salt(t_des_flags *flags)
 	}
 }
 
-static unsigned long	make_key(char *pass, unsigned long salt)
+t_word *make_keys(unsigned char *pass, unsigned long salt, unsigned long len)
 {
 	unsigned char	*temp;
 	unsigned int	i;
 	t_word			*res;
-	unsigned long	key;
 
-	temp = ft_str_unsigned_new(ft_strlen(pass) + 8);
+	temp = ft_str_unsigned_new(len + 8);
 	i = -1;
-	while (++i < ft_strlen(pass))
+	while (++i < len)
 		temp[i] = pass[i];
-	while (++i <= ft_strlen(pass) + 8)
+	while (++i <= len + 8)
 	{
-		temp[ft_strlen(pass) + 8 + ft_strlen(pass)- i] = salt % 256;
+		temp[len + 8 +  len - i] = salt % 256;
 		salt /= 256;
 	}
-	res = ssl_md5(make_word(temp, ft_strlen(pass) + 8));
-	i = -1;
-	key = 0;
-	while (++i < 8)
-		key = key * 256 + res->word[i];
-	ft_str_unsigned_del(&(res->word));
-	free(res);
-	return (key);
+	res = ssl_md5(make_word(temp, len + 8));
+	return (res);
 }
 
-static unsigned long	make_vector(char *pass, unsigned long salt)
+void	add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 {
 	unsigned char	*temp;
 	unsigned int	i;
 	t_word			*res;
-	unsigned long	key;
+	unsigned char	*temp2;
 
-	temp = ft_str_unsigned_new(ft_strlen(pass) + 8);
+	res = make_keys((unsigned char *)pass, salt, ft_strlen(pass));
+	temp2 = res->word;
+	// temp = ft_str_unsigned_new(ft_strlen(pass) + 16);
+	// i = -1;
+	// while (++i < 16)
+	// 	temp[i] = res->word[i];
+	temp = NULL;
+	ft_str_unsigned_concat(&temp, res->word, 0, 16);
+	free(res);
+	ft_str_unsigned_concat(&temp, (unsigned char *)pass, 16, ft_strlen(pass));
+	// while (++i <= ft_strlen(pass) + 16)
+	// 	temp[i - 1] = pass[i - 1 - 16];
+	res = make_keys(temp, salt, ft_strlen(pass) + 16);
 	i = -1;
-	while (++i < ft_strlen(pass))
-		temp[i] = pass[i];
-	while (++i <= ft_strlen(pass) + 8)
-	{
-		temp[ft_strlen(pass) + 8 + ft_strlen(pass)- i] = salt % 256;
-		salt /= 256;
-	}
-	res = ssl_md5(make_word(temp, ft_strlen(pass) + 8));
-	i = -1;
-	key = 0;
 	while (++i < 8)
-		key = key * 256 + res->word[res->length - 8 + i];
+	{
+		flags->key1 = flags->key1 * 256 + temp2[i];
+		flags->key2 = flags->key2 * 256 + temp2[res->length - 8 + i];
+		flags->key3 = flags->key3 * 256 + res->word[i];
+		flags->key4 = flags->key4 * 256 + res->word[res->length - 8 + i];
+	}
+	ft_str_unsigned_del(&temp2);
 	ft_str_unsigned_del(&(res->word));
 	free(res);
-	return (key);
 }
 
 bool					des_parce_arguments(t_des_flags *flags, char **av,
@@ -92,8 +92,9 @@ bool					des_parce_arguments(t_des_flags *flags, char **av,
 	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
 		add_salt(flags);
 	(flags->has_key && !flags->has_vector && !flags->pass &&
-	!ft_strequ("base64", flags->func_name) &&
-	!ft_strequ(flags->func_name, "des-ecb")) ? print_flag_error(flags, 9) : 0;
+	!ft_strequ("base64", flags->func_name) && 
+	!ft_strequ(flags->func_name, "des-ecb") &&
+	!ft_strequ("des3-ecb", flags->func_name)) ? print_flag_error(flags, 9) : 0;
 	if (!flags->has_key && !flags->pass &&
 		!ft_strequ("base64", flags->func_name))
 	{
@@ -102,8 +103,9 @@ bool					des_parce_arguments(t_des_flags *flags, char **av,
 password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	}
 	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
-		(flags->key = make_key(flags->pass, flags->salt));
+		(add_keys(flags->pass, flags->salt, flags));
 	if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
-		flags->vector = make_vector(flags->pass, flags->salt);
+		(ft_strnequ("des3", flags->func_name, 4)) ?
+			(flags->vector = flags->key4) : (flags->vector = flags->key2);
 	return (1);
 }

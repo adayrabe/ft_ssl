@@ -1,6 +1,7 @@
 #include "ssl_des_helper_functions.h"
 #include <errno.h>
 # include <fcntl.h>
+#include <unistd.h>
 
 bool					print_flag_error(t_des_flags *flags, int num)
 {
@@ -27,6 +28,8 @@ vector in hex is the next argument");
 	free(messages);
 	ft_strdel(&(flags->func_name));
 	ft_strdel(&(flags->pass));
+	(flags->input_fd) ? close(flags->input_fd) : 0;
+	(flags->output_fd) ? close(flags->output_fd) : 0;
 	if (!flags->read_from_fd)
 		exit(0);
 	return (0);
@@ -41,7 +44,15 @@ static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 	if (*i == ac)
 		print_flag_error(flags, 1);
 	if (c == 'i')
+	{
 		flags->input_fd = open(av[*i], O_RDONLY, 0644);
+		if (flags->input_fd < 0 || read(flags->input_fd, 0, 0) < 0)
+		{
+			ft_printf("%s: %s\n", av[*i], strerror(errno));
+			close (flags->input_fd);
+			exit(0);
+		}
+	}
 	else
 		flags->output_fd = open(av[*i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 }
@@ -53,6 +64,7 @@ static unsigned long	make_num(char *str, bool *error)
 
 	j = -1;
 	num = 0;
+	// ft_printf("STR: %s\n LEN : %d\n", str, ft_strlen(str));
 	while (++j < 16 && !(*error))
 	{
 		if (j >= ft_strlen(str))
@@ -82,7 +94,16 @@ static void				get_number(t_des_flags *flags, char **av, int ac,
 	error = 0;
 	num = make_num(av[*i], &error);
 	if (c == 'k' && ++flags->has_key)
-		(error) ? print_flag_error(flags, 4) : (flags->key = num);
+		(error) ? print_flag_error(flags, 4) : (flags->key1 = num);
+	if (c == 'k' && ft_strnequ("des3", flags->func_name, 4))
+	{
+		(ft_strlen(av[*i]) > 16) ? (flags->key2 = make_num(&av[*i][16], &error))
+		: (flags->key2 = make_num(NULL, &error));
+		(error) ? print_flag_error(flags, 4) : 0;
+		(ft_strlen(av[*i]) > 32) ? (flags->key3 = make_num(&av[*i][32], &error))
+		: (flags->key3 = make_num(NULL, &error));
+		(error) ? print_flag_error(flags, 4) : 0;
+	}
 	if (c == 's' && ++flags->has_salt)
 		(error) ? print_flag_error(flags, 5) : (flags->salt = num);
 	if (c == 'v' && ++flags->has_vector)
