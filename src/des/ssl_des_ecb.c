@@ -36,8 +36,6 @@ void add_ciphertext(t_word *ciphertext, unsigned long num)
 		temp[7 - i] = num % 256;
 		num /= 256;
 	}
-	// ft_str_unsigned_del(&(ciphertext->word));
-	// ft_str_unsigned_concat(&(ciphertext->word), temp, 0, 8);
 	ft_str_unsigned_concat(&(ciphertext->word), temp, ciphertext->length, 8);
 	ciphertext->length += 8;
 	ft_str_unsigned_del(&temp);
@@ -49,7 +47,6 @@ void	ssl_des_ecb(t_word *ciphertext, t_des_flags *flags,
 {
 	unsigned long res;
 
-	// ft_printf("KEY: %lx\n", flags->key1);
 	if (!flags->encrypt && word->length % 8 != 0)
 	{
 		ft_str_unsigned_del(&(ciphertext->word));
@@ -70,9 +67,16 @@ void	ssl_des_cbc(t_word *ciphertext, t_des_flags *flags,
 	unsigned long res;
 	unsigned long temp;
 
+	if (!flags->encrypt && word->length % 8 != 0)
+	{
+		ft_str_unsigned_del(&(ciphertext->word));
+		free(ciphertext);
+		ft_str_unsigned_del(&(word->word));
+		free(word);
+		print_flag_error(flags, 11);
+	}
 	res = make_message(word->word, word->length, i);
 	temp = res;
-	// ft_printf("VECTOR: %lx\n", flags->vector);
 	if (flags->encrypt)
 		res = res ^ flags->vector;
 	res = code_block(res, flags->key1, flags->encrypt);
@@ -161,6 +165,7 @@ void des3_block(t_word *temp, t_des_flags flags, size_t i, t_word *word)
 	ft_str_unsigned_del(&(temp1)->word);
 	free(temp1);
 }
+
 void des3_cbc(t_word *ciphertext, t_des_flags *flags, size_t i, t_word *word)
 {
 	unsigned long res;
@@ -219,25 +224,20 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 	temp = make_word(ciphertext, 0);
 	if (flags.base64 && !flags.encrypt)
 		base64(word, &flags, 0, word);
+	ft_printf("HERE\n");
 	while (i <= word->length)
 	{
 		if (i == word->length && !flags.encrypt)
 			break ;
-		(ft_strnequ("des3", flags.func_name, 4)) ? des3_block(temp, flags, i, word) :
-			flags.function(temp, &flags, i,  word);
-		// temp->length += 8;
+		(ft_strnequ("des3", flags.func_name, 4)) ? des3_block(temp, flags, i,
+			word) : flags.function(temp, &flags, i,  word);
 		i += 8;
 	}
-	if (flags.base64 && flags.encrypt)
-		base64(temp, &flags, 0, temp);
-	ciphertext = temp->word;
-	i = temp->length;
-	free(temp);
+	(flags.base64 && flags.encrypt) ? base64(temp, &flags, 0, temp) : 0;
+	if (!flags.encrypt && !ft_strequ("des-cfb", flags.func_name) && !ft_strequ
+	("des-ofb", flags.func_name))
+		(temp->word[temp->length - 1] < 1 || temp->word[temp->length - 1] > 8) ?
+		print_flag_error(&flags, 13) : (temp->length -= temp->word[temp->length - 1]);
 	free(word);
-	// size_t l;
-	// ft_printf("\n");
-	// l = -1;
-	// while (++l < i)
-	// 	ft_printf("%x ", ciphertext[l]);
-	return(make_word(ciphertext, i));
+	return(temp);
 }

@@ -52,6 +52,7 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	res.read_from_fd = read_from_fd;
 	res.func_name = ft_strdup(func_name);
 	res.function = f;
+	res.prefix = ft_str_unsigned_new(0);
 	return (res);
 }
 
@@ -68,16 +69,18 @@ static void			des_start_function(t_des_flags flags)
 	res = ssl_des(res, flags);
 	ft_str_unsigned_del(&word);
 	i = -1;
+	if (flags.encrypt || flags.has_salt)
+		while (++i < 16)
+			ft_putchar_fd(flags.prefix[i], flags.output_fd);
+	i = -1;
 	while (++i < res->length)
 	{
-		ft_putchar_fd(res->word[i], flags.output_fd);//("%c", res->word[i]);
-		if ((ft_strequ("base64", flags.func_name) || flags.base64) &&
-			i % 64 == 63)
-			ft_putchar_fd('\n', flags.output_fd);
+		ft_putchar_fd(res->word[i], flags.output_fd);
+		((ft_strequ("base64", flags.func_name) || flags.base64) &&
+			i % 64 == 63) ? ft_putchar_fd('\n', flags.output_fd) : 0;
 	}
-	if (i % 64 != 0 && i &&
-			(ft_strequ("base64", flags.func_name) || flags.base64))
-		ft_putchar_fd('\n', flags.output_fd);
+	(i % 64 != 0 && i && (ft_strequ("base64", flags.func_name) ||
+		flags.base64)) ? ft_putchar_fd('\n', flags.output_fd) : 0;
 	ft_str_unsigned_del(&(res->word));
 	free(res);
 }
@@ -109,6 +112,7 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	des_start_function(flags);
 	ft_strdel(&(flags.pass));
 	ft_strdel(&(flags.func_name));
+	ft_str_unsigned_del(&(flags.prefix));
 	(flags.input_fd) ? close(flags.input_fd) : 0;
 	(flags.output_fd) ? close(flags.output_fd) : 0;
 }

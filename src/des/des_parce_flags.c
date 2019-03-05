@@ -23,11 +23,15 @@ vector in hex is the next argument");
 	messages[7] = "ERROR - NO ARGUMENT FOR PASSWORD";
 	messages[8] = "ERROR - VERIFY FAILURE\nBAD PASSWORD READ";
 	messages[9] = "ERROR - IV UNDEFINED";
-	messages[10] = "ERROR - WRONG INPUT FILE (WORNG HEADER)";
+	messages[10] = "ERROR - WRONG INPUT FILE (WRONG HEADER)";
+	messages[11] = "ERROR - WRONG BLOCK SIZE FOR DES_ECB OR DES-CBC DECRYPTION";
+	messages[12] = "ERROR -SMALL SALT IN INPUT FILE";
+	messages[13] = "ERROR - WRONG ENDING BLOCK FOR DES-ECB OR DES-CBC DECRYPTION";
 	ft_printf("%s\n", messages[num]);
 	free(messages);
 	ft_strdel(&(flags->func_name));
 	ft_strdel(&(flags->pass));
+	ft_str_unsigned_del(&(flags->prefix));
 	(flags->input_fd) ? close(flags->input_fd) : 0;
 	(flags->output_fd) ? close(flags->output_fd) : 0;
 	if (!flags->read_from_fd)

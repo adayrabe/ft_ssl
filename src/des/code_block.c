@@ -216,7 +216,6 @@ unsigned long	code_block(unsigned long m, unsigned long key, bool enc)
 			r = temp ^ calculate(r, subkeys[ip - 1]);
 		else
 			r = temp ^ calculate(r, subkeys[16 - ip]);
-
 	}
 	ip = ((unsigned long)r << 32) + l;
 	ip = permutate(ip, g_ip_minus_one, 64, 64);

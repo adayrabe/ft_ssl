@@ -24,6 +24,7 @@ typedef struct	s_des_flags
 	char			read_from_fd;
 	void			(*function)(t_word *ciphertext, struct s_des_flags *flags,
 						size_t i, t_word *word);
+	unsigned char	*prefix;
 }				t_des_flags;
 
 typedef struct	s_des_stack
