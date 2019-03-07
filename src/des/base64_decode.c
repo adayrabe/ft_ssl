@@ -43,8 +43,9 @@ static bool				transform_decode(unsigned char **line,
 		line[0][i / 4 * 3 + 1] = temp >> 2;
 		temp = temp % 4;
 	}
-	else if (word[2] && word[3] != '"')
+	else if (word[2] && word[3] != '=')
 	{
+		ft_printf("%d\n", i);
 		ft_printf("Invalid character in input stream\n");
 		exit(0);
 	}
@@ -90,6 +91,7 @@ unsigned char			*ssl_base64_decode(unsigned char *word, size_t length)
 		}
 		i++;
 	}
+	ft_printf("Final len: %d\n", (j - 4) / 4 * 3 + 1 + ((word[length - 2]) != '=') + ((word[length - 3] != '=')));
 	ft_str_unsigned_del(&temp);
 	return (res);
 }

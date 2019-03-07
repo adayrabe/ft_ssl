@@ -74,9 +74,9 @@ static t_word		*ssl_des(t_word *word, t_des_flags flags)
 	unsigned char	*ciphertext;
 	t_word			*temp;
 
-	i = 0;
 	ciphertext = ft_str_unsigned_new(0);
 	temp = make_word(ciphertext, 0);
+	i = 0;
 	if (flags.base64 && !flags.encrypt)
 		do_base64_decrypt(word, &flags);
 	while (i <= word->length)
@@ -87,8 +87,9 @@ static t_word		*ssl_des(t_word *word, t_des_flags flags)
 		i += 8;
 	}
 	(flags.base64 && flags.encrypt) ? base64(temp, &flags, 0, temp) : 0;
-	if (!flags.encrypt && !ft_strequ("des-cfb", flags.func_name) && !ft_strequ
-("des-ofb", flags.func_name) && !ft_strnequ("des3", flags.func_name, 4))
+	if (!ft_strequ("base64", flags.func_name) && !flags.encrypt &&
+		!ft_strequ("des-cfb", flags.func_name) && !ft_strequ("des-ofb",
+		flags.func_name) && !ft_strnequ("des3", flags.func_name, 4))
 		(temp->word[temp->length - 1] < 1 || temp->word[temp->length - 1] > 8) ?
 		print_flag_error(&flags, 13) : (temp->length -=
 			temp->word[temp->length - 1]);
@@ -117,7 +118,7 @@ static void			des_start_function(t_des_flags flags)
 	{
 		ft_putchar_fd(res->word[i], flags.output_fd);
 		((ft_strequ("base64", flags.func_name) || flags.base64) &&
-			i % 64 == 63) ? ft_putchar_fd('\n', flags.output_fd) : 0;
+			i % 64 == 63 && flags.encrypt) ? ft_putchar_fd('\n', flags.output_fd) : 0;
 	}
 	(i % 64 != 0 && i && (ft_strequ("base64", flags.func_name) ||
 		flags.base64)) ? ft_putchar_fd('\n', flags.output_fd) : 0;

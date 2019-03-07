@@ -85,7 +85,7 @@ static unsigned char	*do_encrypt(t_word *ciphertext, t_des_flags *flags,
 		res = ssl_base64_encode(temp, 18);
 		ft_str_unsigned_del(&temp);
 		temp = ssl_base64_encode(&(word->word[2]), word->length - 2);
-		ft_str_unsigned_concat(&res, temp, 24, (word->length + 2) / 3 * 4 - 4);
+		ft_str_unsigned_concat(&res, temp, 24, (word->length) / 3 * 4);
 		ciphertext->length = (word->length + 16 + 2) / 3 * 4;
 		ft_str_unsigned_del(&temp);
 	}
@@ -108,6 +108,7 @@ void					base64(t_word *ciphertext, t_des_flags *flags,
 	else
 	{
 		res = ssl_base64_decode(word->word, word->length);
+		ft_printf("%d\n", word->length);
 		ciphertext->length = word->length / 4 * 3;
 	}
 	ciphertext->word = res;

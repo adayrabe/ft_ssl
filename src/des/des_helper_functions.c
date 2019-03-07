@@ -104,7 +104,7 @@ void			do_base64_decrypt(t_word *word, t_des_flags *flags)
 	int				i;
 
 	base64(word, flags, 0, word);
-	if (!flags->has_salt)
+	if (!flags->has_key && flags->base64)
 	{
 		if (!ft_strnequ((char *)word->word, "Salted__", 8))
 			print_flag_error(flags, 10);
@@ -123,5 +123,6 @@ void			do_base64_decrypt(t_word *word, t_des_flags *flags)
 		if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
 			(ft_strnequ("des3", flags->func_name, 4)) ? (flags->vector =
 			flags->key4) : (flags->vector = flags->key2);
+		ft_printf("NOW\n");
 	}
 }

@@ -60,7 +60,7 @@ static unsigned long	make_num(char *str, char *error)
 			return (0);
 		}
 	}
-	if (ft_strlen(str) >= 16)
+	if (ft_strlen(str) > 16)
 		*error = 2;
 	return (num);
 }
