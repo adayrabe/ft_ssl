@@ -174,43 +174,24 @@ void des3_cbc(t_word *ciphertext, t_des_flags *flags, size_t i, t_word *word)
 	unsigned char *temp_message;
 
 	res = make_message(word->word, word->length, i);
-	ft_printf("\n vector: %lx\n", flags->vector);
 	temp = res;
-	// if (flags->encrypt)
+	if (flags->encrypt)
 		res = res ^ flags->vector;
-			// ft_printf("\nRES: %lx\n", res);
-
 	temp_message = ft_str_unsigned_new(0);
 	temp_word = make_word(temp_message, 0);
 	add_ciphertext(temp_word, res);
-	ft_printf("CIPHERTEXT BEFORE: \n");
-	int l;
-	l = -1;
-	while (++l < 8)
-		ft_printf("%x ", ciphertext->word[ciphertext->length - 8 + l]);
-	ft_printf("TEMP BEFORE: \n");
-	l = -1;
-	while (++l < 8)
-		ft_printf("%x ", temp_word->word[l]);
-	des3_block(ciphertext, *flags, i, temp_word);
-	ft_printf("CIPHERTEXT after: \n");
-	l = -1;
-	while (++l < 8)
-		ft_printf("%x ", ciphertext->word[ciphertext->length - 8 + l]);
+	des3_block(ciphertext, *flags, 0, temp_word);
 	res = make_message(ciphertext->word, ciphertext->length, ciphertext->length - 8);
-	// if (!flags->encrypt)
-		// res = flags->vector ^ res;
-	// add_ciphertext(ciphertext, res);
-	// if (flags->encrypt)
-	ft_printf("\nlength: %d\n", ciphertext->length);
-	l = -1;
-	while (++l < 8)
-		ft_printf("%x", ciphertext->word[ciphertext->length - 8 + l]);
-	flags->vector = res;
+	if (!flags->encrypt)
+	{
+		res = flags->vector ^ res;
+		ciphertext->length -= 8;
+		add_ciphertext(ciphertext, res);
+	}
+	(flags->encrypt) ? (flags->vector = res) : 
+		(flags->vector = temp);
 	ft_str_unsigned_del(&(temp_word->word));
 	free(temp_word);
-	// else
-	// 	flags->vector = temp;
 }
 
 t_word		*ssl_des(t_word *word, t_des_flags flags)
@@ -224,12 +205,11 @@ t_word		*ssl_des(t_word *word, t_des_flags flags)
 	temp = make_word(ciphertext, 0);
 	if (flags.base64 && !flags.encrypt)
 		base64(word, &flags, 0, word);
-	ft_printf("HERE\n");
 	while (i <= word->length)
 	{
 		if (i == word->length && !flags.encrypt)
 			break ;
-		(ft_strnequ("des3", flags.func_name, 4)) ? des3_block(temp, flags, i,
+		(ft_strnequ("des3", flags.func_name, 4)) ? des3_cbc(temp, &flags, i,
 			word) : flags.function(temp, &flags, i,  word);
 		i += 8;
 	}

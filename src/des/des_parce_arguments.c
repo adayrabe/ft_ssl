@@ -68,7 +68,6 @@ void add_prefix(t_des_flags *flags, unsigned long salt)
 	while (++i < 8)
 	{
 		temp[7 - i] = salt % 256;
-		ft_printf("%d ", temp[7 - i]);
 		salt /= 256;
 	}
 	ft_str_unsigned_concat(&(flags->prefix), temp, 8, 8);
