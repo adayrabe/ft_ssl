@@ -68,7 +68,7 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	return (res);
 }
 
-static t_word		*ssl_des(t_word *word, t_des_flags flags)
+ t_word		*ssl_des(t_word *word, t_des_flags flags)
 {
 	size_t			i;
 	unsigned char	*ciphertext;
@@ -111,8 +111,10 @@ static void			des_start_function(t_des_flags flags)
 	ft_str_unsigned_del(&word);
 	if ((i = -1) && flags.prefix[0] && !flags.base64 &&
 		(flags.encrypt || flags.has_salt))
+	{
 		while (++i < 16)
 			ft_putchar_fd(flags.prefix[i], flags.output_fd);
+	}
 	i = -1;
 	while (++i < res->length)
 	{
@@ -153,4 +155,5 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	ft_str_unsigned_del(&(flags.prefix));
 	(flags.input_fd) ? close(flags.input_fd) : 0;
 	(flags.output_fd) ? close(flags.output_fd) : 0;
+	// system("Leaks ft_ssl");
 }

@@ -60,6 +60,7 @@ static t_word		*make_keys(unsigned char *pass, unsigned long salt,
 		salt /= 256;
 	}
 	res = ssl_md5(make_word(temp, len + 8));
+	ft_str_unsigned_del(&temp);
 	return (res);
 }
 
@@ -106,6 +107,7 @@ void				add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 	ft_str_unsigned_del(&(res->word));
 	(flags->encrypt) ? add_prefix(flags, salt) : 0;
 	free(res);
+	ft_str_unsigned_del(&temp);
 }
 
 bool				des_parce_arguments(t_des_flags *flags, char **av,
@@ -117,7 +119,7 @@ bool				des_parce_arguments(t_des_flags *flags, char **av,
 	while (++i < ac)
 		if (!des_parce_flags(flags, av, ac, &i))
 			return (0);
-	(flags->encrypt && flags->base64 && !flags->has_key &&
+	((!flags->base64 || flags->encrypt) && !flags->has_key &&
 		!ft_strequ("base64", flags->func_name)) ? add_salt(flags) : 0;
 	(flags->has_key && !flags->has_vector && !flags->pass &&
 	!ft_strequ("base64", flags->func_name) &&

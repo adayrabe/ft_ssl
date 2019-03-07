@@ -57,7 +57,3 @@ fclean: clean
 re: fclean all
 
 vpath %.c $(SRC_DIR)
-
-
-
-

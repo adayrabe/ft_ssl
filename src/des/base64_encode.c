@@ -103,6 +103,8 @@ void					base64(t_word *ciphertext, t_des_flags *flags,
 	unsigned char	*res;
 	t_word			*temp;
 
+	if (!word->word)
+		return ;
 	i = -1;
 	if (flags->encrypt)
 		res = do_encrypt(ciphertext, flags, word);
