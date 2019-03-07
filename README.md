@@ -33,6 +33,10 @@
 	des-ecb
 	des-cbc
 	des-cfb
+	des-ofb
+	des3 (the same as des3-cbc)
+	des3-ecb
+	des3-cbc
 
 	Cipher flags available (for base64 command):
 	-d, decode mode
