@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ssl_des_helper_functions.h                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 13:15:31 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 13:15:32 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef SSL_DES_HELPER_FUNCTIONS_H
 # define SSL_DES_HELPER_FUNCTIONS_H
 # include "ssl_functions.h"
 # include <stdbool.h>
+# include <unistd.h>
 
 typedef struct	s_des_flags
 {
@@ -35,7 +47,6 @@ typedef struct	s_des_stack
 	struct s_des_stack	*next;
 }				t_des_stack;
 
-
 t_word			*ssl_des(t_word *word, t_des_flags flags);
 t_des_stack		*des_make_stack(void);
 void			des_free_stack(t_des_stack **head);
@@ -55,6 +66,9 @@ void			ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
 void			base64(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 unsigned long	code_block(unsigned long m, unsigned long key, bool enc);
-unsigned long	*get_subkeys(unsigned long key);
 unsigned char	*ssl_base64_decode(unsigned char *word, size_t length);
+unsigned long	make_message(unsigned char *str, unsigned long length,
+	size_t i);
+void			add_ciphertext(t_word *ciphertext, unsigned long num);
+
 #endif

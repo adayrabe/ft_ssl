@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pbkdf2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:57:02 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:57:03 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 
 static unsigned char	*do_xor(unsigned char **str1, unsigned char *str2,
@@ -27,12 +39,12 @@ static t_word			*hmac(t_word *(*f)(t_word *word), t_word *key,
 	if (key->length > 64)
 		(key = f(key));
 	o_key_pad = ft_str_unsigned_new(64);
-	o_key_pad = (unsigned char *) ft_strcpy((char *) o_key_pad, 
+	o_key_pad = (unsigned char *)ft_strcpy((char *)o_key_pad,
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
 	o_key_pad = do_xor(&o_key_pad, key->word, 64, key->length);
 	i_key_pad = ft_str_unsigned_new(64);
-	i_key_pad = (unsigned char *)ft_strcpy((char *) i_key_pad,
+	i_key_pad = (unsigned char *)ft_strcpy((char *)i_key_pad,
 	"6666666666666666666666666666666666666666666666666666666666666666");
 	i_key_pad = do_xor(&i_key_pad, key->word, 64, key->length);
 	ft_str_unsigned_concat(&i_key_pad, message->word, 64, message->length);
@@ -78,7 +90,7 @@ static unsigned char	*make_first(unsigned long salt)
 		salt /= 256;
 	}
 	first[11] = 1;
-	return(first);
+	return (first);
 }
 
 unsigned long			pbkdf2(char *pass, unsigned long salt, int c)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   base64_encode.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:37:45 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:37:46 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 
 static char				convert_encode(size_t number)
@@ -22,7 +34,7 @@ static void				transform_encode(unsigned char **line, size_t i,
 	pad = 0;
 	temp = word[i];
 	(i + 1 < len && ++pad) ? (temp = temp * 256 + word[i + 1]) : (temp *= 4);
-	(i + 2 < len && pad++) ? (temp = temp * 256 + word[i + 2]) :  (temp *= 4);
+	(i + 2 < len && pad++) ? (temp = temp * 256 + word[i + 2]) : (temp *= 4);
 	if (pad == 2)
 	{
 		line[0][i / 3 * 4 + 3] = convert_encode(temp % 64);
@@ -54,7 +66,7 @@ static unsigned char	*ssl_base64_encode(unsigned char *word, size_t length)
 	while (i < length)
 	{
 		transform_encode(&res, i, word, length);
-		i+=3;
+		i += 3;
 	}
 	return (res);
 }

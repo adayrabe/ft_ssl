@@ -22,7 +22,7 @@ typedef struct			s_md_stack
 
 }						t_md_stack;
 
-typedef struct	s_md_flags
+typedef struct			s_md_flags
 {
 	char			*name;
 	t_word			*(*f)(t_word *word);
@@ -32,12 +32,13 @@ typedef struct	s_md_flags
 	char			flag_b;
 	char			write_from_stdin;
 	char			read_from_fd;
-}				t_md_flags;
+}						t_md_flags;
 
 unsigned int			*sha256_start_processing(t_word *word,
 		unsigned int *hash_values);
 unsigned long			rot_r(unsigned long value, int amount, int bits);
-int						md_parce_flags(t_md_flags *flags, char **av, int ac, int *i);
+int						md_parce_flags(t_md_flags *flags, char **av, int ac,
+	int *i);
 void					md_from_fd(t_md_flags *flags, int fd, char *name);
 unsigned long			*sha512_start_processing(t_word *word,
 		unsigned long *hash_values);

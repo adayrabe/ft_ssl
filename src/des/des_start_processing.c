@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   des_start_processing.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:55:21 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:55:26 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 #include "ssl_md_helper_functions.h"
 #include <unistd.h>
 #include <fcntl.h>
 
-static int		print_error(t_des_stack **head_des, t_md_stack **head_md,
+static int			print_error(t_des_stack **head_des, t_md_stack **head_md,
 	char *name)
 {
 	t_md_stack	*temp_md;
@@ -29,9 +41,9 @@ commands:\n\nMessage Digest commands:\n", name);
 	return (0);
 }
 
-static t_des_flags	init_flags(char read_from_fd, char *func_name, 
-		void	(*f)(t_word *ciphertext, t_des_flags *flags,
-					size_t i, t_word *word))
+static t_des_flags	init_flags(char read_from_fd, char *func_name,
+		void (*f)(t_word *ciphertext, t_des_flags *flags,
+				size_t i, t_word *word))
 {
 	t_des_flags res;
 
@@ -96,7 +108,8 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	temp_des = head_des;
 	while (temp_des->name != NULL && ft_strcmp(av[0], temp_des->name))
 		temp_des = temp_des->next;
-	if (temp_des->name == NULL && !(print_error(&head_des, head_md, av[0])) && !read_from_fd)
+	if (temp_des->name == NULL && !(print_error(&head_des, head_md, av[0])) &&
+		!read_from_fd)
 		exit(0);
 	if (temp_des->name == NULL)
 		return ;

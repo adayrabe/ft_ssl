@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   des_manage_stack.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:42:33 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:42:35 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 
 static void		push(t_des_stack **head, char *name,
-	void	(*f)(t_word *ciphertext, t_des_flags *flags,
+	void (*f)(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word))
 {
 	t_des_stack *temp;

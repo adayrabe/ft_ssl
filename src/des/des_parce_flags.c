@@ -1,43 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   des_parce_flags.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:51:05 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:51:07 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 #include <errno.h>
-# include <fcntl.h>
+#include <fcntl.h>
 #include <unistd.h>
-
-bool					print_flag_error(t_des_flags *flags, int num)
-{
-	char **messages;
-
-	messages = (char **)malloc(15 * sizeof(char *));
-	messages[0] = ("ERROR - AVAILABLE FLAGS FOR DES AND BASE64:\n\
--d, decode mode\n-e, encode mode\n-i, input file\n-o, output file\n\
-ONLY FOR DES MODE:\n-a, decode/encode the input/output in base64\n\
--k, key in hex is the next arguement\n-p, password in ascii is the next \
-argument\n-s, the salt in hex is the next argument\n-v, initialization \
-vector in hex is the next argument");
-	messages[1] = "ERROR - NO ARGUMENT FOR FILE NAME";
-	messages[2] = "ERROR - WRONG ARGUMENT FOR FILE NAME";
-	messages[3] = "ERROR - NO ARGUMENT FOR num";
-	messages[4] = "ERROR - NON-HEX DIGIT FOR KEY VALUE";
-	messages[5] = "ERROR - NON-HEX DIGIT FOR SALT VALUE";
-	messages[6] = "ERROR - NON-HEX DIGIT FOR VECTOR VALUE";
-	messages[7] = "ERROR - NO ARGUMENT FOR PASSWORD";
-	messages[8] = "ERROR - VERIFY FAILURE\nBAD PASSWORD READ";
-	messages[9] = "ERROR - IV UNDEFINED";
-	messages[10] = "ERROR - WRONG INPUT FILE (WRONG HEADER)";
-	messages[11] = "ERROR - WRONG BLOCK SIZE FOR DES_ECB OR DES-CBC DECRYPTION";
-	messages[12] = "ERROR -SMALL SALT IN INPUT FILE";
-	messages[13] = "ERROR - WRONG ENDING BLOCK FOR DES-ECB OR DES-CBC DECRYPTION";
-	ft_printf("%s\n", messages[num]);
-	free(messages);
-	ft_strdel(&(flags->func_name));
-	ft_strdel(&(flags->pass));
-	ft_str_unsigned_del(&(flags->prefix));
-	(flags->input_fd) ? close(flags->input_fd) : 0;
-	(flags->output_fd) ? close(flags->output_fd) : 0;
-	if (!flags->read_from_fd)
-		exit(0);
-	return (0);
-}
 
 static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 {
@@ -53,7 +29,7 @@ static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 		if (flags->input_fd < 0 || read(flags->input_fd, 0, 0) < 0)
 		{
 			ft_printf("%s: %s\n", av[*i], strerror(errno));
-			close (flags->input_fd);
+			close(flags->input_fd);
 			exit(0);
 		}
 	}
@@ -68,12 +44,11 @@ static unsigned long	make_num(char *str, bool *error)
 
 	j = -1;
 	num = 0;
-	// ft_printf("STR: %s\n LEN : %d\n", str, ft_strlen(str));
 	while (++j < 16 && !(*error))
 	{
 		if (j >= ft_strlen(str))
 			num = num * 16;
-		else if (str[j] >= '0' && str[j]<= '9')
+		else if (str[j] >= '0' && str[j] <= '9')
 			num = num * 16 + str[j] - '0';
 		else if (str[j] >= 'A' && str[j] <= 'F')
 			num = num * 16 + str[j] - 'A' + 10;
@@ -131,7 +106,7 @@ bool					des_parce_flags(t_des_flags *flags, char **av, int ac,
 		get_number(flags, av, ac, i);
 	else if (av[*i][1] == 'p')
 	{
-		(*i)++;	
+		(*i)++;
 		(*i == ac) ? print_flag_error(flags, 7) : 0;
 		flags->pass = ft_strdup(av[*i]);
 	}

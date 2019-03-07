@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   code_block.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:38:37 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:38:39 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 
 int g_pc_one[56] =
@@ -48,7 +60,7 @@ int g_e[48] =
 	28, 29, 30, 31, 32, 1
 };
 
-int g_s [8][64] =
+int g_s[8][64] =
 {
 	{
 		14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
@@ -124,10 +136,11 @@ int g_ip_minus_one[64] =
 	33, 1, 41, 9, 49, 17, 57, 25
 };
 
-static unsigned long	permutate(unsigned long num, int *table, int length, int bits)
+static unsigned long	permutate(unsigned long num, int *table, int length,
+	int bits)
 {
-	unsigned long res;
-	int i;
+	unsigned long	res;
+	int				i;
 
 	i = -1;
 	res = 0;
@@ -136,14 +149,14 @@ static unsigned long	permutate(unsigned long num, int *table, int length, int bi
 	return (res);
 }
 
-static unsigned int	calculate(unsigned int r, unsigned long key)
+static unsigned int		calculate(unsigned int r, unsigned long key)
 {
-	unsigned int res;
-	unsigned long e;
-	int i;
-	int row;
-	int col;
-	unsigned int temp;
+	unsigned int	res;
+	unsigned long	e;
+	int				i;
+	int				row;
+	int				col;
+	unsigned int	temp;
 
 	e = permutate(r, g_e, 48, 32);
 	e = key ^ e;
@@ -151,20 +164,20 @@ static unsigned int	calculate(unsigned int r, unsigned long key)
 	temp = 0;
 	while (++i < 8)
 	{
-		row = (e % 2) +  2 * ((e >> 5) % 2);
+		row = (e % 2) + 2 * ((e >> 5) % 2);
 		col = (e % 32) >> 1;
 		temp = temp + (g_s[7 - i][row * 16 + col] << (i * 4));
 		e = e >> 6;
 	}
 	res = (unsigned int)permutate(temp, g_p, 32, 32);
-	return(res);
+	return (res);
 }
 
 static unsigned long	make_subkey(unsigned long *c, unsigned long *d, int i)
 {
-	int bits;
-	unsigned long res;
-	unsigned long cd;
+	int				bits;
+	unsigned long	res;
+	unsigned long	cd;
 
 	if (i == 0 || i == 1 || i == 8 || i == 15)
 		bits = 1;
@@ -177,13 +190,13 @@ static unsigned long	make_subkey(unsigned long *c, unsigned long *d, int i)
 	return (res);
 }
 
-unsigned long	*get_subkeys(unsigned long key)
+static unsigned long	*get_subkeys(unsigned long key)
 {
-	unsigned long   key_plus;
-	unsigned long   *res;
-	int             i;
-	unsigned long   c;
-	unsigned long   d;
+	unsigned long	key_plus;
+	unsigned long	*res;
+	int				i;
+	unsigned long	c;
+	unsigned long	d;
 
 	key_plus = permutate(key, g_pc_one, 56, 64);
 	c = (unsigned int)(key_plus >> 28);
@@ -195,7 +208,7 @@ unsigned long	*get_subkeys(unsigned long key)
 	return (res);
 }
 
-unsigned long	code_block(unsigned long m, unsigned long key, bool enc)
+unsigned long			code_block(unsigned long m, unsigned long key, bool enc)
 {
 	unsigned long	ip;
 	unsigned int	l;

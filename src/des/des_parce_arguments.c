@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   des_parce_arguments.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 12:43:34 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 12:43:35 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_des_helper_functions.h"
 #include <unistd.h>
 #include <fcntl.h>
@@ -5,10 +17,10 @@
 static void			add_salt(t_des_flags *flags)
 {
 	unsigned char	temp[9];
-	int		i;
-	int		len;
-	int		temp_fd;
-	
+	int				i;
+	int				len;
+	int				temp_fd;
+
 	if (!flags->encrypt && !flags->has_key)
 	{
 		read(flags->input_fd, temp, 8);
@@ -38,7 +50,8 @@ static void			add_salt(t_des_flags *flags)
 	}
 }
 
-t_word *make_keys(unsigned char *pass, unsigned long salt, unsigned long len)
+static t_word		*make_keys(unsigned char *pass, unsigned long salt,
+	unsigned long len)
 {
 	unsigned char	*temp;
 	unsigned int	i;
@@ -50,17 +63,17 @@ t_word *make_keys(unsigned char *pass, unsigned long salt, unsigned long len)
 		temp[i] = pass[i];
 	while (++i <= len + 8)
 	{
-		temp[len + 8 +  len - i] = salt % 256;
+		temp[len + 8 + len - i] = salt % 256;
 		salt /= 256;
 	}
 	res = ssl_md5(make_word(temp, len + 8));
 	return (res);
 }
 
-void add_prefix(t_des_flags *flags, unsigned long salt)
+static void			add_prefix(t_des_flags *flags, unsigned long salt)
 {
-	unsigned char *temp;
-	int i;
+	unsigned char	*temp;
+	int				i;
 
 	ft_str_unsigned_concat(&(flags->prefix), (unsigned char *)"Salted__", 0, 8);
 	temp = ft_str_unsigned_new(8);
@@ -74,7 +87,7 @@ void add_prefix(t_des_flags *flags, unsigned long salt)
 	ft_str_unsigned_del(&temp);
 }
 
-void	add_keys(char *pass, unsigned long salt, t_des_flags *flags)
+static void			add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 {
 	unsigned char	*temp;
 	unsigned int	i;
@@ -102,7 +115,7 @@ void	add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 	free(res);
 }
 
-bool					des_parce_arguments(t_des_flags *flags, char **av,
+bool				des_parce_arguments(t_des_flags *flags, char **av,
 	int ac)
 {
 	int i;
@@ -114,20 +127,20 @@ bool					des_parce_arguments(t_des_flags *flags, char **av,
 	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
 		add_salt(flags);
 	(flags->has_key && !flags->has_vector && !flags->pass &&
-	!ft_strequ("base64", flags->func_name) && 
+	!ft_strequ("base64", flags->func_name) &&
 	!ft_strequ(flags->func_name, "des-ecb") &&
 	!ft_strequ("des3-ecb", flags->func_name)) ? print_flag_error(flags, 9) : 0;
+	(!flags->has_key && !flags->pass && !ft_strequ("base64", flags->func_name))
+	? (flags->pass = ft_strdup(getpass("enter des encryption password:"))) : 0;
 	if (!flags->has_key && !flags->pass &&
 		!ft_strequ("base64", flags->func_name))
-	{
-		flags->pass = ft_strdup(getpass("enter des encryption password:"));
-		(flags->encrypt && !ft_strequ(getpass("Verifying - enter des\
- encryption password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
-	}
+		(flags->encrypt && !ft_strequ(getpass("Verifying - enter des \
+encryption password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
 	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
 		(add_keys(flags->pass, flags->salt, flags));
 	if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
 		(ft_strnequ("des3", flags->func_name, 4)) ?
-			(flags->vector = flags->key4) : (flags->vector = flags->key2);
+			(flags->vector = flags->key4) :
+			(flags->vector = flags->key2);
 	return (1);
 }
