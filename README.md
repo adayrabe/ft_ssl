@@ -37,6 +37,7 @@
 	des3 (the same as des3-cbc)
 	des3-ecb
 	des3-cbc
+	des-ofb
 
 	Cipher flags available (for base64 command):
 	-d, decode mode
