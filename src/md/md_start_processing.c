@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-static t_md_flags	*create_flag(t_word			*(*f)(t_word *word),
+static t_md_flags	*create_flag(t_word *(*f)(t_word *word),
 	char *name)
 {
 	t_md_flags *flags;
@@ -33,7 +33,7 @@ static t_md_flags	*create_flag(t_word			*(*f)(t_word *word),
 	return (flags);
 }
 
-static void		read_from_files(int i, char **av, int ac, t_md_flags *flags)
+static void			read_from_files(int i, char **av, int ac, t_md_flags *flags)
 {
 	int fd;
 
@@ -50,7 +50,7 @@ static void		read_from_files(int i, char **av, int ac, t_md_flags *flags)
 	}
 }
 
-static void		md_parce_args(t_md_flags *flags, char **av, int ac)
+static void			md_parce_args(t_md_flags *flags, char **av, int ac)
 {
 	int i;
 	int temp;
@@ -75,7 +75,7 @@ static void		md_parce_args(t_md_flags *flags, char **av, int ac)
 		md_from_fd(flags, 0, NULL);
 }
 
-void			md_start_processing(int ac, char **av, char read_from_fd)
+void				md_start_processing(int ac, char **av, char read_from_fd)
 {
 	t_md_flags		*flags;
 	t_md_stack		*head;

@@ -27,18 +27,19 @@ static unsigned long	*sha384_init_hash_values(void)
 	hash_values[7] = 0x47b5481dbefa4fa4;
 	return (hash_values);
 }
-t_word *ssl_sha384(t_word *word)
+
+t_word					*ssl_sha384(t_word *word)
 {
 	unsigned long	*hash_values;
 	int				i;
-	unsigned char *res;
-	int j;
+	unsigned char	*res;
+	int				j;
 
 	hash_values = sha384_init_hash_values();
 	hash_values = sha512_start_processing(word, hash_values);
 	res = ft_str_unsigned_new(48);
 	i = -1;
-	while(++i < 6)
+	while (++i < 6)
 	{
 		j = 8;
 		while (--j >= 0)
@@ -47,7 +48,7 @@ t_word *ssl_sha384(t_word *word)
 			hash_values[i] /= 256;
 		}
 	}
-	free(hash_values);		
+	free(hash_values);
 	free(word);
-	return(make_word(res, 48));
+	return (make_word(res, 48));
 }

@@ -47,7 +47,6 @@ typedef struct	s_des_stack
 	struct s_des_stack	*next;
 }				t_des_stack;
 
-t_word			*ssl_des(t_word *word, t_des_flags flags);
 t_des_stack		*des_make_stack(void);
 void			des_free_stack(t_des_stack **head);
 bool			des_parce_flags(t_des_flags *flags, char **av,
@@ -63,6 +62,12 @@ void			ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 void			ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
+void			ssl_des3_ecb(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word);
+void			ssl_des3_cbc(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word);
+void			ssl_des3_ofb(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word);
 void			base64(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 unsigned long	code_block(unsigned long m, unsigned long key, bool enc);
@@ -70,5 +75,6 @@ unsigned char	*ssl_base64_decode(unsigned char *word, size_t length);
 unsigned long	make_message(unsigned char *str, unsigned long length,
 	size_t i);
 void			add_ciphertext(t_word *ciphertext, unsigned long num);
-
+void			add_keys(char *pass, unsigned long salt, t_des_flags *flags);
+void			do_base64_decrypt(t_word *word, t_des_flags *flags);
 #endif

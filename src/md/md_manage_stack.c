@@ -13,7 +13,7 @@
 #include "ssl_md_helper_functions.h"
 
 static void		push(t_md_stack **head, char *name,
-	t_word			*(*f)(t_word *word))
+	t_word *(*f)(t_word *word))
 {
 	t_md_stack *temp;
 
@@ -24,7 +24,7 @@ static void		push(t_md_stack **head, char *name,
 	*head = temp;
 }
 
-void md_free_stack(t_md_stack **head)
+void			md_free_stack(t_md_stack **head)
 {
 	t_md_stack *temp;
 

@@ -71,17 +71,40 @@ static unsigned char	*ssl_base64_encode(unsigned char *word, size_t length)
 	return (res);
 }
 
+static unsigned char	*do_encrypt(t_word *ciphertext, t_des_flags *flags,
+	t_word *word)
+{
+	unsigned char *temp;
+	unsigned char *res;
+
+	if (flags->prefix[0])
+	{
+		temp = ft_str_unsigned_new(0);
+		ft_str_unsigned_concat(&temp, flags->prefix, 0, 16);
+		ft_str_unsigned_concat(&temp, word->word, 16, 2);
+		res = ssl_base64_encode(temp, 18);
+		ft_str_unsigned_del(&temp);
+		temp = ssl_base64_encode(&(word->word[2]), word->length - 2);
+		ft_str_unsigned_concat(&res, temp, 24, (word->length + 2) / 3 * 4 - 4);
+		ciphertext->length = (word->length + 16 + 2) / 3 * 4;
+		ft_str_unsigned_del(&temp);
+	}
+	else
+	{
+		res = ssl_base64_encode(word->word, word->length);
+		ciphertext->length = (word->length + 2) / 3 * 4;
+	}
+	return (res);
+}
+
 void					base64(t_word *ciphertext, t_des_flags *flags,
 	size_t i, t_word *word)
 {
 	unsigned char *res;
 
-	i = 0;
+	i = -1;
 	if (flags->encrypt)
-	{
-		res = ssl_base64_encode(word->word, word->length);
-		ciphertext->length = (word->length + 2) / 3 * 4;
-	}
+		res = do_encrypt(ciphertext, flags, word);
 	else
 	{
 		res = ssl_base64_decode(word->word, word->length);

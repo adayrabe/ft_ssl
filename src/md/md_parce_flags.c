@@ -13,7 +13,7 @@
 #include "ssl_functions.h"
 #include "ssl_md_helper_functions.h"
 
-t_word	*make_word(unsigned char *word, size_t length)
+t_word			*make_word(unsigned char *word, size_t length)
 {
 	t_word	*res;
 
@@ -53,7 +53,7 @@ static void		parce_s_flag(t_md_flags *flags, char **av, int *i, int *j)
 		word = make_word((unsigned char *)av[++(*i)], ft_strlen(av[*i]));
 		if (!flags->flag_q && !flags->flag_r)
 			ft_printf("%s (\"%s\") = ", ft_str_to_upper(flags->name), av[*i]);
-	 print_result(word = flags->f(word));
+		print_result(word = flags->f(word));
 		if (!flags->flag_q && flags->flag_r)
 			ft_printf(" \"%s\"", av[*i]);
 		(*j) = (int)ft_strlen(av[*i]) - 1;

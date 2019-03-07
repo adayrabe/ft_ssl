@@ -156,20 +156,19 @@ static unsigned int		calculate(unsigned int r, unsigned long key)
 	int				i;
 	int				row;
 	int				col;
-	unsigned int	temp;
 
 	e = permutate(r, g_e, 48, 32);
 	e = key ^ e;
 	i = -1;
-	temp = 0;
+	res = 0;
 	while (++i < 8)
 	{
 		row = (e % 2) + 2 * ((e >> 5) % 2);
 		col = (e % 32) >> 1;
-		temp = temp + (g_s[7 - i][row * 16 + col] << (i * 4));
+		res = res + (g_s[7 - i][row * 16 + col] << (i * 4));
 		e = e >> 6;
 	}
-	res = (unsigned int)permutate(temp, g_p, 32, 32);
+	res = (unsigned int)permutate(res, g_p, 32, 32);
 	return (res);
 }
 

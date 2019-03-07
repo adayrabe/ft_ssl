@@ -19,7 +19,6 @@ static void			add_salt(t_des_flags *flags)
 	unsigned char	temp[9];
 	int				i;
 	int				len;
-	int				temp_fd;
 
 	if (!flags->encrypt && !flags->has_key)
 	{
@@ -28,26 +27,20 @@ static void			add_salt(t_des_flags *flags)
 		if (!ft_strequ((char *)temp, "Salted__"))
 			print_flag_error(flags, 10);
 	}
-	if (!flags->has_salt)
+	if (!flags->has_salt && flags->encrypt)
 	{
-		if (flags->encrypt)
-		{
-			temp_fd = open("/dev/random", O_RDONLY);
-			read(temp_fd, temp, 8);
-			i = -1;
-			while (++i < 8)
-				flags->salt = flags->salt * 256 + temp[i];
-			close(temp_fd);
-		}
-		else
-		{
-			len = read(flags->input_fd, temp, 8);
-			(len < 8) ? print_flag_error(flags, 12) : 0;
-			i = -1;
-			while (++i < 8)
-				flags->salt = flags->salt * 256 + temp[i];
-		}
+		i = open("/dev/random", O_RDONLY);
+		read(i, temp, 8);
+		close(i);
 	}
+	if (!flags->encrypt)
+	{
+		len = read(flags->input_fd, temp, 8);
+		(len < 8) ? print_flag_error(flags, 12) : 0;
+	}
+	if ((i = -1) && (!flags->has_salt || !flags->encrypt))
+		while (++i < 8)
+			flags->salt = flags->salt * 256 + temp[i];
 }
 
 static t_word		*make_keys(unsigned char *pass, unsigned long salt,
@@ -87,7 +80,7 @@ static void			add_prefix(t_des_flags *flags, unsigned long salt)
 	ft_str_unsigned_del(&temp);
 }
 
-static void			add_keys(char *pass, unsigned long salt, t_des_flags *flags)
+void				add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 {
 	unsigned char	*temp;
 	unsigned int	i;
@@ -111,7 +104,7 @@ static void			add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 	}
 	ft_str_unsigned_del(&temp2);
 	ft_str_unsigned_del(&(res->word));
-	add_prefix(flags, salt);
+	(flags->encrypt) ? add_prefix(flags, salt) : 0;
 	free(res);
 }
 
@@ -124,23 +117,23 @@ bool				des_parce_arguments(t_des_flags *flags, char **av,
 	while (++i < ac)
 		if (!des_parce_flags(flags, av, ac, &i))
 			return (0);
-	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
-		add_salt(flags);
+	(flags->encrypt && flags->base64 && !flags->has_key &&
+		!ft_strequ("base64", flags->func_name)) ? add_salt(flags) : 0;
 	(flags->has_key && !flags->has_vector && !flags->pass &&
 	!ft_strequ("base64", flags->func_name) &&
 	!ft_strequ(flags->func_name, "des-ecb") &&
 	!ft_strequ("des3-ecb", flags->func_name)) ? print_flag_error(flags, 9) : 0;
-	(!flags->has_key && !flags->pass && !ft_strequ("base64", flags->func_name))
-	? (flags->pass = ft_strdup(getpass("enter des encryption password:"))) : 0;
-	if (!flags->has_key && !flags->pass &&
-		!ft_strequ("base64", flags->func_name))
+	if (!flags->has_key && !flags->pass && !ft_strequ("base64",
+		flags->func_name))
+	{
+		(flags->pass = ft_strdup(getpass("enter des encryption password:")));
 		(flags->encrypt && !ft_strequ(getpass("Verifying - enter des \
 encryption password:"), flags->pass)) ? print_flag_error(flags, 8) : 0;
+	}
 	if (!flags->has_key && !ft_strequ("base64", flags->func_name))
 		(add_keys(flags->pass, flags->salt, flags));
 	if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
-		(ft_strnequ("des3", flags->func_name, 4)) ?
-			(flags->vector = flags->key4) :
-			(flags->vector = flags->key2);
+		(ft_strnequ("des3", flags->func_name, 4)) ? (flags->vector =
+			flags->key4) : (flags->vector = flags->key2);
 	return (1);
 }

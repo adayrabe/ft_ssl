@@ -38,15 +38,14 @@ t_word				*ssl_sha256(t_word *word)
 {
 	unsigned int	*hash_values;
 	int				i;
-	unsigned char *res;
-	int j;
-
+	unsigned char	*res;
+	int				j;
 
 	hash_values = sha256_init_hash_values();
 	hash_values = sha256_start_processing(word, hash_values);
 	res = ft_str_unsigned_new(32);
 	i = -1;
-	while(++i < 8)
+	while (++i < 8)
 	{
 		j = 4;
 		while (--j >= 0)
@@ -55,9 +54,6 @@ t_word				*ssl_sha256(t_word *word)
 			hash_values[i] /= 256;
 		}
 	}
-	// i = -1;
-	// while (++i < 32)
-	// 	ft_printf("%.2x", res[i]);
 	free(hash_values);
 	free(word);
 	return (make_word(res, 32));

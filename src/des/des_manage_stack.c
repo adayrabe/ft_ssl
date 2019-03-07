@@ -44,11 +44,10 @@ t_des_stack		*des_make_stack(void)
 
 	head = NULL;
 	push(&head, NULL, NULL);
-	push(&head, "des3-cfb", ssl_des_cfb);
-	push(&head, "des3-ofb", ssl_des_ofb);
-	push(&head, "des3-cbc", ssl_des_cbc);
-	push(&head, "des3-ecb", ssl_des_ecb);
-	push(&head, "des3", ssl_des_cbc);
+	push(&head, "des3-ofb", ssl_des3_ofb);
+	push(&head, "des3-cbc", ssl_des3_cbc);
+	push(&head, "des3-ecb", ssl_des3_ecb);
+	push(&head, "des3", ssl_des3_cbc);
 	push(&head, "des-cfb", ssl_des_cfb);
 	push(&head, "des-ofb", ssl_des_ofb);
 	push(&head, "des-cbc", ssl_des_cbc);

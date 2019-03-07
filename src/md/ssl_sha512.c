@@ -29,18 +29,18 @@ static unsigned long	*sha512_init_hash_values(void)
 	return (hash_values);
 }
 
-t_word				*ssl_sha512(t_word *word)
+t_word					*ssl_sha512(t_word *word)
 {
 	unsigned long	*hash_values;
 	int				i;
 	unsigned char	*res;
-	int j;
+	int				j;
 
 	hash_values = sha512_init_hash_values();
 	hash_values = sha512_start_processing(word, hash_values);
 	res = ft_str_unsigned_new(64);
 	i = -1;
-	while(++i < 8)
+	while (++i < 8)
 	{
 		j = 8;
 		while (--j >= 0)

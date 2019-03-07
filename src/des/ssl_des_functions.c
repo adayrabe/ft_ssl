@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ssl_des_helper_funstions.h"
+#include "ssl_des_helper_functions.h"
 
 void	ssl_des_ecb(t_word *ciphertext, t_des_flags *flags,
 	size_t i, t_word *word)

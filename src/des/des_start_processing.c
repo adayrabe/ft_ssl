@@ -68,6 +68,34 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	return (res);
 }
 
+static t_word		*ssl_des(t_word *word, t_des_flags flags)
+{
+	size_t			i;
+	unsigned char	*ciphertext;
+	t_word			*temp;
+
+	i = 0;
+	ciphertext = ft_str_unsigned_new(0);
+	temp = make_word(ciphertext, 0);
+	if (flags.base64 && !flags.encrypt)
+		do_base64_decrypt(word, &flags);
+	while (i <= word->length)
+	{
+		if (i == word->length && !flags.encrypt)
+			break ;
+		flags.function(temp, &flags, i, word);
+		i += 8;
+	}
+	(flags.base64 && flags.encrypt) ? base64(temp, &flags, 0, temp) : 0;
+	if (!flags.encrypt && !ft_strequ("des-cfb", flags.func_name) && !ft_strequ
+("des-ofb", flags.func_name) && !ft_strnequ("des3", flags.func_name, 4))
+		(temp->word[temp->length - 1] < 1 || temp->word[temp->length - 1] > 8) ?
+		print_flag_error(&flags, 13) : (temp->length -=
+			temp->word[temp->length - 1]);
+	free(word);
+	return (temp);
+}
+
 static void			des_start_function(t_des_flags flags)
 {
 	unsigned char	*word;
@@ -80,8 +108,8 @@ static void			des_start_function(t_des_flags flags)
 	res = make_word(word, length);
 	res = ssl_des(res, flags);
 	ft_str_unsigned_del(&word);
-	i = -1;
-	if (flags.encrypt || flags.has_salt)
+	if ((i = -1) && flags.prefix[0] && !flags.base64 &&
+		(flags.encrypt || flags.has_salt))
 		while (++i < 16)
 			ft_putchar_fd(flags.prefix[i], flags.output_fd);
 	i = -1;
@@ -118,10 +146,6 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	des_free_stack(&head_des);
 	if (!des_parce_arguments(&flags, av, ac))
 		return ;
-	ft_printf(" base64: %d\n encrypt: %d\n input_fd: %d\n output_fd: %d\n key1: %lx\n key2: %lx\n key3: %lx\n key4: %lx\n has_key: %d\n pass: %s\n salt: %lx\n has_salt: %d\n vector: %lx\n has_vector: %d\n func_name: %s\n",
-		flags.base64, flags.encrypt, flags.input_fd,
-		flags.output_fd, flags.key1, flags.key2, flags.key3, flags.key4, flags.has_key, flags.pass, flags.salt, flags.has_salt,
-		flags.vector, flags.has_vector, flags.func_name);
 	des_start_function(flags);
 	ft_strdel(&(flags.pass));
 	ft_strdel(&(flags.func_name));

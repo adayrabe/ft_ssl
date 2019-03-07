@@ -37,7 +37,7 @@ static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 		flags->output_fd = open(av[*i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 }
 
-static unsigned long	make_num(char *str, bool *error)
+static unsigned long	make_num(char *str, char *error)
 {
 	unsigned int	j;
 	unsigned long	num;
@@ -55,8 +55,13 @@ static unsigned long	make_num(char *str, bool *error)
 		else if (str[j] >= 'a' && str[j] <= 'f')
 			num = num * 16 + str[j] - 'a' + 10;
 		else
+		{
 			*error = 1;
+			return (0);
+		}
 	}
+	if (ft_strlen(str) >= 16)
+		*error = 2;
 	return (num);
 }
 
@@ -65,7 +70,7 @@ static void				get_number(t_des_flags *flags, char **av, int ac,
 {
 	char			c;
 	unsigned long	num;
-	bool			error;
+	char			error;
 
 	c = av[*i][1];
 	(*i)++;
@@ -73,20 +78,21 @@ static void				get_number(t_des_flags *flags, char **av, int ac,
 	error = 0;
 	num = make_num(av[*i], &error);
 	if (c == 'k' && ++flags->has_key)
-		(error) ? print_flag_error(flags, 4) : (flags->key1 = num);
+		(error == 1) ? print_flag_error(flags, 4) : (flags->key1 = num);
 	if (c == 'k' && ft_strnequ("des3", flags->func_name, 4))
 	{
 		(ft_strlen(av[*i]) > 16) ? (flags->key2 = make_num(&av[*i][16], &error))
 		: (flags->key2 = make_num(NULL, &error));
-		(error) ? print_flag_error(flags, 4) : 0;
+		(error == 1) ? print_flag_error(flags, 4) : 0;
 		(ft_strlen(av[*i]) > 32) ? (flags->key3 = make_num(&av[*i][32], &error))
 		: (flags->key3 = make_num(NULL, &error));
-		(error) ? print_flag_error(flags, 4) : 0;
+		(error == 1) ? print_flag_error(flags, 4) : 0;
 	}
+	(c == 's' && error == 2) ? print_flag_error(flags, 14) : 0;
 	if (c == 's' && ++flags->has_salt)
-		(error) ? print_flag_error(flags, 5) : (flags->salt = num);
+		(error == 1) ? print_flag_error(flags, 5) : (flags->salt = num);
 	if (c == 'v' && ++flags->has_vector)
-		(error) ? print_flag_error(flags, 6) : (flags->vector = num);
+		(error == 1) ? print_flag_error(flags, 6) : (flags->vector = num);
 }
 
 bool					des_parce_flags(t_des_flags *flags, char **av, int ac,

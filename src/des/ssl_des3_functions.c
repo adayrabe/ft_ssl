@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ssl_des.c                                          :+:      :+:    :+:   */
+/*   ssl_des3_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,8 @@
 
 #include "ssl_des_helper_functions.h"
 
-void		des3_block(t_word *temp, t_des_flags flags, size_t i, t_word *word)
+static void				ssl_des3_block(t_word *temp, t_des_flags flags,
+	size_t i, t_word *word)
 {
 	t_word			*temp1;
 	unsigned char	*c1;
@@ -41,8 +42,14 @@ void		des3_block(t_word *temp, t_des_flags flags, size_t i, t_word *word)
 	free(temp1);
 }
 
-void		des3_cbc(t_word *ciphertext, t_des_flags *flags, size_t i,
-	t_word *word)
+void					ssl_des3_ecb(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
+{
+	ssl_des3_block(ciphertext, *flags, i, word);
+}
+
+void					ssl_des3_cbc(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
 {
 	unsigned long	res;
 	unsigned long	temp;
@@ -56,7 +63,7 @@ void		des3_cbc(t_word *ciphertext, t_des_flags *flags, size_t i,
 	temp_message = ft_str_unsigned_new(0);
 	temp_word = make_word(temp_message, 0);
 	add_ciphertext(temp_word, res);
-	des3_block(ciphertext, *flags, 0, temp_word);
+	ssl_des3_block(ciphertext, *flags, 0, temp_word);
 	res = make_message(ciphertext->word, ciphertext->length,
 		ciphertext->length - 8);
 	if (!flags->encrypt)
@@ -71,31 +78,44 @@ void		des3_cbc(t_word *ciphertext, t_des_flags *flags, size_t i,
 	free(temp_word);
 }
 
-t_word		*ssl_des(t_word *word, t_des_flags flags)
+static unsigned long	des_ofb_help(t_des_flags *flags, t_word *temp_word)
 {
-	size_t			i;
-	unsigned char	*ciphertext;
-	t_word			*temp;
+	t_word			*temp_word2;
+	unsigned char	*temp_message2;
+	unsigned long	res;
 
-	i = 0;
-	ciphertext = ft_str_unsigned_new(0);
-	temp = make_word(ciphertext, 0);
-	if (flags.base64 && !flags.encrypt)
-		base64(word, &flags, 0, word);
-	while (i <= word->length)
-	{
-		if (i == word->length && !flags.encrypt)
-			break ;
-		(ft_strnequ("des3", flags.func_name, 4)) ? des3_cbc(temp, &flags, i,
-			word) : flags.function(temp, &flags, i, word);
-		i += 8;
-	}
-	(flags.base64 && flags.encrypt) ? base64(temp, &flags, 0, temp) : 0;
-	if (!flags.encrypt && !ft_strequ("des-cfb", flags.func_name) && !ft_strequ
-("des-ofb", flags.func_name))
-		(temp->word[temp->length - 1] < 1 || temp->word[temp->length - 1] > 8) ?
-		print_flag_error(&flags, 13) : (temp->length -=
-			temp->word[temp->length - 1]);
-	free(word);
-	return (temp);
+	temp_message2 = ft_str_unsigned_new(0);
+	temp_word2 = make_word(temp_message2, 0);
+	ssl_des3_block(temp_word2, *flags, 0, temp_word);
+	res = make_message(temp_word2->word, temp_word2->length, 0);
+	ft_str_unsigned_del(&temp_message2);
+	free(temp_word2);
+	return (res);
+}
+
+void					ssl_des3_ofb(t_word *ciphertext, t_des_flags *flags,
+	size_t i, t_word *word)
+{
+	unsigned long	res;
+	bool			enc;
+	t_word			*temp_word;
+	unsigned char	*temp_message;
+
+	enc = flags->encrypt;
+	flags->encrypt = 1;
+	if (i == word->length && enc)
+		return ;
+	temp_message = ft_str_unsigned_new(0);
+	temp_word = make_word(temp_message, 0);
+	add_ciphertext(temp_word, flags->vector);
+	res = des_ofb_help(flags, temp_word);
+	flags->vector = res;
+	res = make_message(word->word, word->length, i);
+	res = res ^ flags->vector;
+	add_ciphertext(ciphertext, res);
+	if (ciphertext->length > word->length)
+		ciphertext->length = word->length;
+	flags->encrypt = enc;
+	ft_str_unsigned_del(&(temp_word->word));
+	free(temp_word);
 }

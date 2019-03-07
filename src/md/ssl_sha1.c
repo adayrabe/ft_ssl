@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ssl_sha1.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adayrabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/07 13:27:58 by adayrabe          #+#    #+#             */
+/*   Updated: 2019/03/07 13:27:59 by adayrabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ssl_md_helper_functions.h"
 
-static void		sha1_append_w_arr(unsigned int **w_arr)
+static void			sha1_append_w_arr(unsigned int **w_arr)
 {
 	int				i;
 	unsigned int	temp;
@@ -15,7 +27,7 @@ static void		sha1_append_w_arr(unsigned int **w_arr)
 	}
 }
 
-static int		sha1_init_w_arr(t_word *word, unsigned int **w_arr,
+static int			sha1_init_w_arr(t_word *word, unsigned int **w_arr,
 			int append_one, size_t *processed_amount)
 {
 	size_t			curr_length;
@@ -45,8 +57,8 @@ static int		sha1_init_w_arr(t_word *word, unsigned int **w_arr,
 	return ((curr_length < 64) + (curr_length < 56));
 }
 
-static void		sha1_main_loop(unsigned int **temp,
-	 unsigned int *w_arr)
+static void			sha1_main_loop(unsigned int **temp,
+	unsigned int *w_arr)
 {
 	int				i;
 	unsigned int	f;
@@ -58,15 +70,15 @@ static void		sha1_main_loop(unsigned int **temp,
 	{
 		if (i >= 0 && i <= 19 && (k = 0x5A827999))
 			f = (temp[0][1] & temp[0][2]) | ((~temp[0][1]) & temp[0][3]);
-		else if (i >= 20 && i<= 39 && (k = 0x6ED9EBA1))
+		else if (i >= 20 && i <= 39 && (k = 0x6ED9EBA1))
 			f = temp[0][1] ^ temp[0][2] ^ temp[0][3];
 		else if (i >= 40 && i <= 59 && (k = 0x8F1BBCDC))
 			f = (temp[0][1] & temp[0][2]) | (temp[0][1] & temp[0][3]) |
 		(temp[0][2] & temp[0][3]);
 		else if (i >= 60 && i <= 79 && (k = 0xCA62C1D6))
 			f = temp[0][1] ^ temp[0][2] ^ temp[0][3];
-		temp_var = ((temp[0][0] << 5) | (temp[0][0] >> (32 - 5))) + f + temp[0][4]
-			+ k + w_arr[i];
+		temp_var = ((temp[0][0] << 5) | (temp[0][0] >> (32 - 5))) + f +
+		temp[0][4] + k + w_arr[i];
 		temp[0][4] = temp[0][3];
 		temp[0][3] = temp[0][2];
 		temp[0][2] = (temp[0][1] << 30) | (temp[0][1] >> (32 - 30));
@@ -121,7 +133,7 @@ t_word				*ssl_sha1(t_word *word)
 	hash_values = sha1_start_processing(word, hash_values);
 	res = ft_str_unsigned_new(20);
 	i = -1;
-	while(++i < 5 && (j = 4))
+	while (++i < 5 && (j = 4))
 		while (--j >= 0)
 		{
 			res[i * 4 + j] = hash_values[i] % 256;
