@@ -123,6 +123,5 @@ void			do_base64_decrypt(t_word *word, t_des_flags *flags)
 		if (!flags->has_vector && !ft_strequ("base64", flags->func_name))
 			(ft_strnequ("des3", flags->func_name, 4)) ? (flags->vector =
 			flags->key4) : (flags->vector = flags->key2);
-		ft_printf("NOW\n");
 	}
 }

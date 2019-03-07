@@ -66,7 +66,7 @@ static bool				is_white_space(unsigned char c)
 	return (0);
 }
 
-unsigned char			*ssl_base64_decode(unsigned char *word, size_t length)
+t_word			*ssl_base64_decode(unsigned char *word, size_t length)
 {
 	unsigned char	*res;
 	size_t			i;
@@ -91,7 +91,6 @@ unsigned char			*ssl_base64_decode(unsigned char *word, size_t length)
 		}
 		i++;
 	}
-	ft_printf("Final len: %d\n", (j - 4) / 4 * 3 + 1 + ((word[length - 2]) != '=') + ((word[length - 3] != '=')));
 	ft_str_unsigned_del(&temp);
-	return (res);
+	return (make_word(res, j / 4 * 3 - ((word[length - 2]) == '=') - ((word[length - 3] == '='))));
 }

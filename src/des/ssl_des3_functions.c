@@ -63,7 +63,7 @@ void					ssl_des3_cbc(t_word *ciphertext, t_des_flags *flags,
 	temp_message = ft_str_unsigned_new(0);
 	temp_word = make_word(temp_message, 0);
 	add_ciphertext(temp_word, res);
-	ssl_des3_block(ciphertext, *flags, 0, temp_word);
+	ssl_des3_ecb(ciphertext, flags, 0, temp_word);
 	res = make_message(ciphertext->word, ciphertext->length,
 		ciphertext->length - 8);
 	if (!flags->encrypt)
@@ -88,7 +88,7 @@ static unsigned long	des_ofb_help(t_des_flags *flags, t_word *temp_word)
 	temp_word2 = make_word(temp_message2, 0);
 	ssl_des3_block(temp_word2, *flags, 0, temp_word);
 	res = make_message(temp_word2->word, temp_word2->length, 0);
-	ft_str_unsigned_del(&temp_message2);
+	ft_str_unsigned_del(&(temp_word2->word));
 	free(temp_word2);
 	return (res);
 }

@@ -71,7 +71,7 @@ void			ssl_des3_ofb(t_word *ciphertext, t_des_flags *flags,
 void			base64(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 unsigned long	code_block(unsigned long m, unsigned long key, bool enc);
-unsigned char	*ssl_base64_decode(unsigned char *word, size_t length);
+t_word			*ssl_base64_decode(unsigned char *word, size_t length);
 unsigned long	make_message(unsigned char *str, unsigned long length,
 	size_t i);
 void			add_ciphertext(t_word *ciphertext, unsigned long num);

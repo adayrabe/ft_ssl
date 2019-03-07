@@ -100,16 +100,18 @@ static unsigned char	*do_encrypt(t_word *ciphertext, t_des_flags *flags,
 void					base64(t_word *ciphertext, t_des_flags *flags,
 	size_t i, t_word *word)
 {
-	unsigned char *res;
+	unsigned char	*res;
+	t_word			*temp;
 
 	i = -1;
 	if (flags->encrypt)
 		res = do_encrypt(ciphertext, flags, word);
 	else
 	{
-		res = ssl_base64_decode(word->word, word->length);
-		ft_printf("%d\n", word->length);
-		ciphertext->length = word->length / 4 * 3;
+		temp = ssl_base64_decode(word->word, word->length);
+		ciphertext->length = temp->length;
+		res = temp->word;
+		free(temp);
 	}
 	ciphertext->word = res;
 }
