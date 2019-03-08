@@ -66,7 +66,7 @@ static bool				is_white_space(unsigned char c)
 	return (0);
 }
 
-t_word			*ssl_base64_decode(unsigned char *word, size_t length)
+t_word					*ssl_base64_decode(unsigned char *word, size_t length)
 {
 	unsigned char	*res;
 	size_t			i;
