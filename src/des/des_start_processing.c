@@ -50,7 +50,7 @@ static t_des_flags	init_flags(char read_from_fd, char *func_name,
 	res.base64 = 0;
 	res.encrypt = 1;
 	res.input_fd = 0;
-	res.output_fd = 0;
+	res.output_fd = 1;
 	res.key1 = 0;
 	res.key2 = 0;
 	res.key3 = 0;
@@ -117,6 +117,7 @@ static void			des_start_function(t_des_flags flags, size_t i,
 	i = -1;
 	while (++i < res->length)
 	{
+		ft_putchar_fd('a', 0);
 		ft_putchar_fd(res->word[i], flags.output_fd);
 		((ft_strequ("base64", flags.func_name) || flags.base64) && i % 64 == 63
 		&& flags.encrypt) ? ft_putchar_fd('\n', flags.output_fd) : 0;
