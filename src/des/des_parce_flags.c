@@ -102,6 +102,8 @@ bool					des_parce_flags(t_des_flags *flags, char **av, int ac,
 		return (print_flag_error(flags, 0));
 	if (av[*i][1] == 'd')
 		flags->encrypt = 0;
+	else if (av[*i][1] == 'e')
+		flags->encrypt = 1;
 	else if (av[*i][1] == 'i' || av[*i][1] == 'o')
 		get_fd(flags, av, ac, i);
 	else if (ft_strequ(flags->func_name, "base64"))

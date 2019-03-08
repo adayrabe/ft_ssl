@@ -117,7 +117,6 @@ static void			des_start_function(t_des_flags flags, size_t i,
 	i = -1;
 	while (++i < res->length)
 	{
-		ft_putchar_fd('a', 0);
 		ft_putchar_fd(res->word[i], flags.output_fd);
 		((ft_strequ("base64", flags.func_name) || flags.base64) && i % 64 == 63
 		&& flags.encrypt) ? ft_putchar_fd('\n', flags.output_fd) : 0;
