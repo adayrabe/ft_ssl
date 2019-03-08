@@ -74,12 +74,12 @@ t_word			*ssl_base64_decode(unsigned char *word, size_t length)
 	size_t			j;
 	bool			done;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	done = 0;
 	res = ft_str_unsigned_new(length / 4 * 3);
 	temp = ft_str_unsigned_new(4);
-	while (i < length && !done)
+	while (++i < length && !done)
 	{
 		if (!is_white_space(word[i]) && ++j)
 			temp[(j - 1) % 4] = word[i];
@@ -89,8 +89,8 @@ t_word			*ssl_base64_decode(unsigned char *word, size_t length)
 			ft_str_unsigned_del(&temp);
 			temp = ft_str_unsigned_new(4);
 		}
-		i++;
 	}
 	ft_str_unsigned_del(&temp);
-	return (make_word(res, j / 4 * 3 - ((word[length - 2]) == '=') - ((word[length - 3] == '='))));
+	return (make_word(res, j / 4 * 3 - ((word[length - 2]) == '=')
+		- ((word[length - 3] == '='))));
 }
