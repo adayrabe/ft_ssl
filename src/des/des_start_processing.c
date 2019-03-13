@@ -140,7 +140,7 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 		temp_des = temp_des->next;
 	if (temp_des->name == NULL && !(print_error(&head_des, head_md, av[0])) &&
 		!read_from_fd)
-		exit(0);
+		exit(EXIT_FAILURE);
 	if (temp_des->name == NULL)
 		return ;
 	md_free_stack(head_md);

@@ -54,7 +54,7 @@ bool			print_flag_error(t_des_flags *flags, int num)
 	(flags->input_fd) ? close(flags->input_fd) : 0;
 	(flags->output_fd != 1) ? close(flags->output_fd) : 0;
 	if (!flags->read_from_fd)
-		exit(0);
+		exit(EXIT_FAILURE);
 	return (0);
 }
 

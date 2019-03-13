@@ -30,7 +30,7 @@ static void				get_fd(t_des_flags *flags, char **av, int ac, int *i)
 		{
 			ft_printf("%s: %s\n", av[*i], strerror(errno));
 			close(flags->input_fd);
-			exit(0);
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
