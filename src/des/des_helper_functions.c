@@ -52,7 +52,7 @@ bool			print_flag_error(t_des_flags *flags, int num)
 	ft_strdel(&(flags->pass));
 	ft_str_unsigned_del(&(flags->prefix));
 	(flags->input_fd) ? close(flags->input_fd) : 0;
-	(flags->output_fd) ? close(flags->output_fd) : 0;
+	(flags->output_fd != 1) ? close(flags->output_fd) : 0;
 	if (!flags->read_from_fd)
 		exit(0);
 	return (0);

@@ -153,5 +153,5 @@ void				des_start_processing(int ac, char **av, char read_from_fd,
 	ft_strdel(&(flags.func_name));
 	ft_str_unsigned_del(&(flags.prefix));
 	(flags.input_fd) ? close(flags.input_fd) : 0;
-	(flags.output_fd) ? close(flags.output_fd) : 0;
+	(flags.output_fd != 1) ? close(flags.output_fd) : 0;
 }
