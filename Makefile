@@ -18,15 +18,9 @@ INC_DIR := ./inc/
 LIB_DIR := ./libftprintf/
 
 RM = /bin/rm -rf
-# dirs = * parse/* parse/test/*
 
 SRC := $(wildcard src/*/*.c) src/main.c
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:src/%.c=%.o))
-# OBJ     =  $(foreach dirz, $(dirs), \
-#         \
-#         $(patsubst %.c,%.o,$(wildcard $(dirz).c)) \
-#         \
-#     )
 
 LIBFT := $(LIB_DIR)libftprintf.a
 LIBFT_INC := $(LIB_DIR)inc
