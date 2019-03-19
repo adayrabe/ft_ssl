@@ -88,6 +88,7 @@ void				add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 	t_word			*res;
 	unsigned char	*temp2;
 
+	((i = -1) && !pass[0]) ? print_flag_error(flags, 15) : 0;
 	res = make_keys((unsigned char *)pass, salt, ft_strlen(pass));
 	temp2 = res->word;
 	temp = NULL;
@@ -95,7 +96,6 @@ void				add_keys(char *pass, unsigned long salt, t_des_flags *flags)
 	free(res);
 	ft_str_unsigned_concat(&temp, (unsigned char *)pass, 16, ft_strlen(pass));
 	res = make_keys(temp, salt, ft_strlen(pass) + 16);
-	i = -1;
 	while (++i < 8)
 	{
 		flags->key1 = flags->key1 * 256 + temp2[i];

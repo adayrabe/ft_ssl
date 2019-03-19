@@ -16,6 +16,20 @@
 #include <unistd.h>
 #include <errno.h>
 
+void			delete_args( int ac, char ***av, char **line)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		ft_strdel(&av[0][i]);
+		i++;
+	}
+	free(*av);
+	ft_strdel(line);
+}
+
 int				main(int ac, char **av)
 {
 	char	*line;
@@ -37,10 +51,11 @@ int				main(int ac, char **av)
 					|| (i == 0 && line[i] != ' '))
 					argc++;
 			line[0] ? md_start_processing(argc, argv, 1) : 0;
-			ft_strdel(&line);
+			delete_args(argc, &argv, &line);
 			ft_printf("ft_ssl>");
 		}
 	}
 	(ac >= 2) ? md_start_processing(ac - 1, &av[1], 0) : 0;
+	system("leaks ft_ssl");
 	return (0);
 }

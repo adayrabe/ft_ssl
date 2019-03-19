@@ -14,31 +14,31 @@
 
 static char		**make_error_messages(void)
 {
-	char **messages;
+	char **m;
 
-	messages = (char **)malloc(15 * sizeof(char *));
-	messages[0] = ("ERROR - AVAILABLE FLAGS FOR DES AND BASE64:\n\
+	m = (char **)malloc(16 * sizeof(char *));
+	m[0] = ("ERROR - AVAILABLE FLAGS FOR DES AND BASE64:\n\
 -d, decode mode\n-e, encode mode\n-i, input file\n-o, output file\n\
 ONLY FOR DES MODE:\n-a, decode/encode the input/output in base64\n\
 -k, key in hex is the next argument\n-p, password in ascii is the next \
 argument\n-s, the salt in hex is the next argument\n-v, initialization \
 vector in hex is the next argument");
-	messages[1] = "ERROR - NO ARGUMENT FOR FILE NAME";
-	messages[2] = "ERROR - WRONG ARGUMENT FOR FILE NAME";
-	messages[3] = "ERROR - NO ARGUMENT FOR num";
-	messages[4] = "ERROR - NON-HEX DIGIT FOR KEY VALUE";
-	messages[5] = "ERROR - NON-HEX DIGIT FOR SALT VALUE";
-	messages[6] = "ERROR - NON-HEX DIGIT FOR VECTOR VALUE";
-	messages[7] = "ERROR - NO ARGUMENT FOR PASSWORD";
-	messages[8] = "ERROR - VERIFY FAILURE\nBAD PASSWORD READ";
-	messages[9] = "ERROR - IV UNDEFINED";
-	messages[10] = "ERROR - WRONG INPUT FILE (BAD MAGIC NUMBER)";
-	messages[11] = "ERROR - WRONG BLOCK SIZE FOR DES_ECB OR DES-CBC DECRYPTION";
-	messages[12] = "ERROR - SMALL SALT IN INPUT FILE";
-	messages[13] = "ERROR - WRONG ENDING BLOCK FOR DES-ECB OR DES-CBC DECRYPTIO\
-N";
-	messages[14] = "ERROR - HEX STRING IS TOO LONG \nINVALID SALT HEX VALUE";
-	return (messages);
+	m[1] = "ERROR - NO ARGUMENT FOR FILE NAME";
+	m[2] = "ERROR - WRONG ARGUMENT FOR FILE NAME";
+	m[3] = "ERROR - NO ARGUMENT FOR num";
+	m[4] = "ERROR - NON-HEX DIGIT FOR KEY VALUE";
+	m[5] = "ERROR - NON-HEX DIGIT FOR SALT VALUE";
+	m[6] = "ERROR - NON-HEX DIGIT FOR VECTOR VALUE";
+	m[7] = "ERROR - NO ARGUMENT FOR PASSWORD";
+	m[8] = "ERROR - VERIFY FAILURE\nBAD PASSWORD READ";
+	m[9] = "ERROR - IV UNDEFINED";
+	m[10] = "ERROR - WRONG INPUT FILE (BAD MAGIC NUMBER)";
+	m[11] = "ERROR - WRONG BLOCK SIZE FOR DES_ECB OR DES-CBC DECRYPTION";
+	m[12] = "ERROR - SMALL SALT IN INPUT FILE";
+	m[13] = "ERROR - WRONG ENDING BLOCK FOR DES-ECB OR DES-CBC DECRYPTION";
+	m[14] = "ERROR - HEX STRING IS TOO LONG \nINVALID SALT HEX VALUE";
+	m[15] = "ERROR - PASSWORD CAN NOT START WITH A NULL CHARACTER";
+	return (m);
 }
 
 bool			print_flag_error(t_des_flags *flags, int num)
