@@ -58,6 +58,8 @@ void			ssl_des_ecb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 void			ssl_des_cbc(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
+void			ssl_des_pcbc(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word);
 void			ssl_des_cfb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 void			ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
@@ -65,6 +67,8 @@ void			ssl_des_ofb(t_word *ciphertext, t_des_flags *flags,
 void			ssl_des3_ecb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 void			ssl_des3_cbc(t_word *ciphertext, t_des_flags *flags,
+						size_t i, t_word *word);
+void			ssl_des3_pcbc(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);
 void			ssl_des3_ofb(t_word *ciphertext, t_des_flags *flags,
 						size_t i, t_word *word);

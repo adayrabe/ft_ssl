@@ -32,11 +32,13 @@
 	des (the same as des-cbc)
 	des-ecb
 	des-cbc
+	des-pcbc
 	des-cfb
 	des-ofb
 	des3 (the same as des3-cbc)
 	des3-ecb
 	des3-cbc
+	des3-pcbc
 	des-ofb
 
 	Cipher flags available (for base64 command):

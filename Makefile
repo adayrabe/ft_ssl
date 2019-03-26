@@ -32,13 +32,13 @@ HEADER_FLAGS := -I inc/ -I $(LIB_DIR)inc/
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) $(INC_DIR)*
-	@gcc $(LIBFT_FLAGS) $(OBJ) -o $(NAME)
+	gcc $(LIBFT_FLAGS) $(OBJ) -o $(NAME)
 
 $(OBJ_DIR)%.o:%.c
 	@mkdir -p obj
 	@mkdir -p obj/des
 	@mkdir -p obj/md
-	@gcc $(FLAGS) $(HEADER_FLAGS) -c $< -o $@ 
+	gcc $(FLAGS) $(HEADER_FLAGS) -c $< -o $@ 
 $(LIBFT):
 	@make -C $(LIB_DIR)
 clean: 
@@ -46,8 +46,8 @@ clean:
 	@make clean -C$(LIB_DIR)
 
 fclean: clean
-	@$(RM) $(NAME)
-	@make fclean -C $(LIB_DIR)
+	$(RM) $(NAME)
+	make fclean -C $(LIB_DIR)
 re: fclean all
 
 vpath %.c $(SRC_DIR)
